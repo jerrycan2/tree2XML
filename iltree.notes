@@ -1,0 +1,18 @@
+to do: 
+
+- hyperlinks in html-file: range
+- more safety? automatic saving? - done
+- look at color fetching - done
+- load/save progress indicator - done but save not working
+- 'hide greek' -> checkbox, i.e. permanent? - done
+- statusbar 1:which file 2: which action - done
+- set working dir - done
+- print tree - discard
+-select doesn't enter into the lookuplist
+=undo for butlerform 'set' button - done
+-helpfile butlerform - doing
+-refactor all or most names for clarity
+-safety check xml line nrs. on save - done
+-xml integrity check?
+-prevent accidental moving of nodes
+-also prevent changing ANY line nrs in xml and tree - ? see above

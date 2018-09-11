@@ -1,0 +1,28 @@
+How to use butlerform and get the Butler-paragraphs to correspond to the Greek paragraphs (the Greek par. can only be changed by the treeview form)
+
+- select a node in the treeview or a greek line in the Divide-And-Conquer form
+- the current butler paragraph(This) will appear in the middle (pink) panel, the Prev one in the blue, the Next one in the green.
+- the Greek paragraph-lines that correspond to the pink panel will be checked
+
+- the SET button:
+grow or shrink the number of checks in the Greek panel; adjust the English text accordingly.
+After pressing SET, Prev will be from its beginning up to the first check, This will be all the checks, and Next will be the rest. No paragraphs are created or deleted. The English texts are saved to their paragraph.
+You must not check before the beginning of Prev (blue) or the end of Next (green): those are fixed and This (pink), Prev or Next cannot become empty.
+This operation can be undone.
+
+- SPLIT
+Splits the This-panel in two. Second part becomes the new Next: a new paragraph is created.
+Adjust the Greek checks to correspond to the first part of the split, set the cursor in the butlertext where it should be split. Then press the button. The new Next will be the remaining part of the old This. The operation can be undone.
+
+- MERGE
+Merges the Next with This. The cursor position is irrelevant. The old Next paragraph is deleted and This receives the contents of both. This op can also be undone.
+
+No onscreen changes are saved unless one of the set-merge-split buttons is clicked
+
+- UNDO
+With every Set, Split or Merge an Undo-item is pushed on stack, the Undo-button pops them back again.
+
+Do not forget to save the butlertext.xml file through the file menu.
+
+checking the butlertext:
+...

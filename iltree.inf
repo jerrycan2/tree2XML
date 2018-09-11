@@ -1,0 +1,17 @@
+ilbgcolor=16777215
+ilfgcolor=8421376
+illeft=6
+iltop=15
+ilwidth=1603
+ilheight=1196
+ilmaximized=0
+ilfontsize=9
+ilfont=Lucida Sans Unicode
+ilfiles=iliad.xml,iliad.bk9
+ilfileindex=0
+autosave=1
+autoload=0
+showleaves=0
+workdir=C:\Users\jeroe\Documents\Embarcadero\delphi\tree2XML
+LookupList=iliad.xml
+butlerfile=C:\Users\jeroe\Documents\Embarcadero\delphi\DAQ\butlertext.xml

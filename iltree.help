@@ -1,0 +1,79 @@
+Iltree helpfile
+
+keys: 
+  
+ -UP select previous node
+ -DOWN select next node
+ -LEFT select parent of current node
+ -RIGHT select first child of current node
+ -click on the text of a selected node (or press F2) to enter EDIT mode and change the text of that caption.
+ -click somewhere else to leave EDIT mode
+ -typing letters/numbers starts an incremental search for linenumber or bookmark or caption according to the radiobuttons above. This switches off the 'hide Greek' checkbox
+
+  CTRL-drag: insert selected nodes BEFORE droptarget
+  Shift-drag: insert AFTER
+
+  F2 edit caption of current node (or doubleclick on the text)
+  F3 show remarks field (this)
+  F11 makes the text of the EDITing node italic or resets it
+  F12 scrolls the first selected node into view
+
+  'Enter' (or dbl click) expands/collapses the selected node (expanding only if node is not rightmost)
+
+remark: select node, push F3, type text, text is saved on exit. Node shows a round button instead of a square checkbox
+Push F3 again to hide remark text
+
+buttons, left to right:u
+open book = load (xml) file in combobox
+closed book = save (xml) file in combobox
+
+combobox: file to load ( with open book), a new one can be entered
+or one deleted (select one, push delete key - the file remains on disk)
+save xml as html - button. Bm and remarks are discarded, colors preserved.
+'load xml' on startup
+'save xml' on close. If greyed, prompt on close
+
+load & save tree in its current expanded state in binary format,
+usable as 'undo/redo' state.
+Both bookmarks & remarks are saved in this format, as is its expansion state and scroll position.
+Clicking 'save' saves the iltree.undo file, click 'load' to load it.
+Closing the program saves the 'iltree.rescue' file (if "Changed" is checked), Alt-click 'load' to load it.
+
+txt: show/hide greek text window. Its width adjusts to mainform width
+on redraw.
+palet: show/hide color pick form
+'fetch' gets colors of first selected node, plus 2x15 of the nodecolors used
+'set' sets fg or bg color
+'reset' sets fg or bg color to default
+
+2 columns: show another leftmost column, if unexpanded levels available
+1 column: hide leftmost column, except the first level
+
+expand tree: expand & show one more level, if available. On expanding, the first selected item stays in view.
+collapse tree: collapse a level, if possible. Selected item stays in view.
+
+insert node: create a new child of selected node and
+	let it take its children
+delete node: delete selected node, its children become
+	children of the parent node
+
+incremental search (of bookmark, line, caption):
+select appropriate search, then get focus on iltree,
+type chars on keyboard
+
+search in Greek text form: enter text in textbox,
+then click Greek button.
+Ctrl up/down: goto previous/next
+
+insert bookmark: select node, click bm button, (textbox turns blue until the bookmark is set), enter text in textbox, then click something. (keep to this sequence)
+A booklet shows in node. On selecting a bm'ed node
+its name appears in the textbox
+
+if the tree is expanded enough to show the greek textines, set 'hide greek' to hide this text (except the group of textlines where you have one selected). They stay hidden until you uncheck the box again.
+
+Adjust fontsize with the spinedit, both tree- and text form. It is slow to show the change!
+
+ 
+corresponding latin & greek letters:
+'ABGDEZHQIKLMNCOPRSTUFXYWabgdezhqiklmncoprstufxyw'
+'??G????T?????????S??F??Oaﬂ?de??????µ???p?st?f???'
