@@ -31,7 +31,7 @@ main.fmx.fff
 *.old
 ProjectGroup1_prjgroup.tvsconfig.xml
 bla*.*
-*.bup
+*bup*
 colbtn*
 FastMM*
 flash.*
@@ -47,7 +47,6 @@ Package*
 Project*
 *.zip
 *.pdf
-treeview*
 wiltree*
 VT*
 VST*
