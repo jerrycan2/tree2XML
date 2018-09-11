@@ -11,8 +11,8 @@ uses
   Vcl.Themes,
   Vcl.Styles,
   gs_dialog in 'gs_dialog.pas' {GreekSaveDialog},
-  butlerview in 'DAQ\butlerview.pas' {ButlerForm},
-  compareform in 'DAQ\compareform.pas' {CompForm};
+  butlerview in 'DAC\butlerview.pas' {ButlerForm},
+  compareform in 'DAC\compareform.pas' {CompForm};
 
 {$R *.res}
 

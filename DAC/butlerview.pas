@@ -910,6 +910,7 @@ begin
         Anode.NodeValue := cards[n].first.GetID(id_num);
         inc(n);
     end;
+    Form1.RenameBackups('Butlertext');
     ButlerXMLDoc.SaveToFile('Butlertext.xml');
 end;
 
