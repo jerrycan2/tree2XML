@@ -37,7 +37,7 @@ FastMM*
 flash.*
 *.htm
 *.html
-iliad.bk?
+*.bk?
 *.exe
 *.undo
 *.rescue
@@ -57,4 +57,3 @@ oih*
 images
 main*
 noot5.gif
-*.bk1
