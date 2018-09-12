@@ -469,6 +469,7 @@ begin
     cards[CurrentCardNr].text := thisMemo.text;
     cards[CurrentCardNr - 1].text := prevMemo.text;
     cards[CurrentCardNr + 1].text := nextMemo.text;
+    GreekViewSelectItem(nil, searchLine(new_card_first), false);
 end;
 
 procedure TButlerForm.ClearCheckStack;
