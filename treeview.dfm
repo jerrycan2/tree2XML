@@ -3,7 +3,7 @@ object Form1: TForm1
   Top = 80
   Caption = 'The Iliad: a structural analysis'
   ClientHeight = 736
-  ClientWidth = 1016
+  ClientWidth = 1046
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clTeal
@@ -24,12 +24,13 @@ object Form1: TForm1
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 1016
+    Width = 1046
     Height = 91
     Align = alTop
     Color = 10865875
     ParentBackground = False
     TabOrder = 0
+    ExplicitWidth = 1016
     object Label1: TLabel
       Left = 775
       Top = 42
@@ -2187,11 +2188,19 @@ object Form1: TForm1
       TabOrder = 32
       OnClick = greekbuttonClick
     end
+    object DragDropOK: TCheckBox
+      Left = 928
+      Top = 40
+      Width = 97
+      Height = 17
+      Caption = 'DragDrop OK'
+      TabOrder = 33
+    end
   end
   object Iltree: TVirtualStringTree
     Left = 0
     Top = 185
-    Width = 1016
+    Width = 1046
     Height = 532
     Align = alClient
     Background.Data = {
@@ -3736,6 +3745,7 @@ object Form1: TForm1
     OnMouseUp = IltreeMouseUp
     OnSaveNode = IltreeSaveNode
     OnStructureChange = IltreeStructureChange
+    ExplicitWidth = 1016
     Columns = <
       item
         CaptionAlignment = taCenter
@@ -3750,7 +3760,7 @@ object Form1: TForm1
   object StatusBar1: TStatusBar
     Left = 0
     Top = 717
-    Width = 1016
+    Width = 1046
     Height = 19
     Color = clInfoBk
     Panels = <
@@ -3761,11 +3771,12 @@ object Form1: TForm1
       item
         Width = 50
       end>
+    ExplicitWidth = 1016
   end
   object remarks: TRichEdit
     Left = 0
     Top = 91
-    Width = 1016
+    Width = 1046
     Height = 94
     Align = alTop
     Font.Charset = ANSI_CHARSET
@@ -3782,6 +3793,7 @@ object Form1: TForm1
     OnEnter = remarksEnter
     OnExit = remarksExit
     OnKeyDown = remarksKeyDown
+    ExplicitWidth = 1016
   end
   object XMLDocument1: TXMLDocument
     Options = [doNodeAutoCreate, doNodeAutoIndent, doAttrNull, doAutoPrefix, doNamespaceDecl]

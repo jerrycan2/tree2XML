@@ -61,6 +61,7 @@ type
         ListButton: TButton;
         OpenDialog1: TOpenDialog;
         greekbutton: TButton;
+        DragDropOK: TCheckBox;
 
         procedure FormCreate(Sender: TObject);
         procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -177,7 +178,6 @@ type
         icons: TBitMap;
         mask: TBitMap;
         FormLeft, FormTop, FormWidth, FormHeight: Integer;
-        DragDropOK: Boolean;
     end;
 
 type
@@ -1412,11 +1412,6 @@ procedure TForm1.IltreeKeyDown(Sender: TObject; var Key: Word; Shift: TShiftStat
 var
     Node: PVirtualNode;
 begin
-    if (ssShift in Shift) or (ssCtrl in Shift) then
-        DragDropOK := True
-    else
-        DragDropOK := false;
-
     case Key of // F2 (goto edit mode) is a functionality of Iltree itself
         VK_F3:
             if not remarks.Visible then
@@ -1449,8 +1444,6 @@ var
     i: Integer;
     tdata: ^rTreeData;
 begin
-    DragDropOK := false;
-
     if not((Key = VK_UP) or (Key = VK_DOWN) or (Key = VK_F12)) then
         Exit;
 
@@ -1793,12 +1786,12 @@ end;
 procedure TForm1.IltreeDragAllowed(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex;
   var Allowed: Boolean);
 begin (* not from outside Iltree, no textlines *)
-    Allowed := DragDropOK;
+    Allowed := DragDropOK.Checked;
 end;
 
 procedure TForm1.IltreeDragDrop(Sender: TBaseVirtualTree; Source: TObject; DataObject: IDataObject;
   Formats: TFormatArray; Shift: TShiftState; Pt: TPoint; var Effect: Integer; Mode: TDropMode);
-var // drag + alt: insert after, + ctrl: insert before
+var // drag + shift: insert after, + ctrl: insert before
     target: PVirtualNode;
     sourcenodes: TNodeArray;
     i: Integer;
@@ -1807,9 +1800,9 @@ begin
     attm := amInsertAfter;
     target := Iltree.DropTargetNode;
     sourcenodes := Sender.GetSortedSelection(True);
-    if ssCtrl in Shift then
+    if (ssCtrl in Shift) then
         attm := amInsertBefore
-    else if ssShift in Shift then
+    else if (ssShift in Shift) then
         attm := amInsertAfter
     else exit;
     // if target.ChildCount = 0 then
@@ -2516,7 +2509,7 @@ begin
     Form1.WindowState := wsNormal;
     is_changed.Checked := false;
     ChooseDir.HomeDir := GetCurrentDir;
-    DragDropOK := false;
+    DragDropOK.Checked := false;
 
     if FileExists('iltree.inf') then
     begin
