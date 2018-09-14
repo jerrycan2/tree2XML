@@ -135,6 +135,7 @@ type
         procedure undobuttonClick(Sender: TObject);
         procedure LoadCardsFromXML;
     procedure helpbuttonClick(Sender: TObject);
+    procedure load1Click(Sender: TObject);
     private
         cards: TObjectList<TCard>;
         CheckedItemStack: TStack<TListItem>;
@@ -346,11 +347,15 @@ procedure TButlerForm.FormDestroy(Sender: TObject);
 var
     card: TCard;
 begin
+    if UndoStack.Count > 0 then
+    begin
+        CreateNewDoc;
+        while UndoStack.Count > 0 do
+            UndoStack.Pop.Free;
+    end;
+    UndoStack.Free;
     cards.Free;
     CheckedItemStack.Free;
-    while UndoStack.Count > 0 do
-        UndoStack.Pop.Free;
-    UndoStack.Free;
 end;
 
 procedure TButlerForm.FormResize(Sender: TObject);
@@ -834,6 +839,12 @@ begin
     end;
 end;
 
+procedure TButlerForm.load1Click(Sender: TObject);
+begin
+    Form1.ButlerFileName := '';
+    loadButlerXMLClick(nil);
+end;
+
 procedure TButlerForm.loadButlerXMLClick(Sender: TObject);
 begin
     if Form1.ButlerFileName = '' then
@@ -848,7 +859,7 @@ begin
     ButlerXMLDoc := TXMLDocument.Create(Self);
     Form1.ButlerFileName := Form1.ButlerFileName;
     ButlerXMLDoc.LoadFromFile(Form1.ButlerFileName);
-    GreekView.Columns[1].Caption := System.IOUtils.TPath.GetFileName(Form1.ButlerFileName);
+    GreekView.Columns[1].Caption := 'using' + System.IOUtils.TPath.GetFileName(Form1.ButlerFileName);
     LoadCardsFromXML;
     ButlerXMLDoc.Free;
 end;

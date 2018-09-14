@@ -415,7 +415,7 @@ object ButlerForm: TButlerForm
       Caption = 'file'
       object load1: TMenuItem
         Caption = 'load new'
-        OnClick = loadButlerXMLClick
+        OnClick = load1Click
       end
       object save1: TMenuItem
         Caption = 'save'
