@@ -3,7 +3,7 @@
         <ProjectGuid>{B57E258E-5272-4D93-8C9A-59C7F3A56D68}</ProjectGuid>
         <MainSource>iltree.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Application</AppType>
         <FrameworkType>VCL</FrameworkType>
@@ -207,7 +207,6 @@
                 <Platform value="Win64">False</Platform>
             </Platforms>
             <Deployment Version="3">
-                <DeployFile LocalName="iltree.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployFile LocalName="iltree.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployFile LocalName="iltree.exe" Configuration="Release" Class="ProjectOutput"/>
                 <DeployClass Name="AdditionalDebugSymbols">

@@ -240,7 +240,6 @@ object Form3: TForm3
     Height = 14
     Caption = 'BG'
     TabOrder = 15
-    OnClick = SetFGClick
   end
   object resetbtn: TBitBtn
     Left = 407

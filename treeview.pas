@@ -291,17 +291,16 @@ end; // *************end rename backups**************
 
 procedure TForm1.XML2Tree(Iltree: TVirtualStringTree; XMLDoc: TXMLDocument);
 var
+    error_shown: boolean;
     jNode: IXMLNode;
 
     procedure ProcessNode(XNode: IXMLNode; VNode: PVirtualNode);
     var
         firstXNode: IXMLNode;
-        tdata, parentdata: ^rTreeData;
+        tdata: ^rTreeData;
         text, textoud, line, chap: String;
-        error_shown: boolean;
         item: TListItem;
     begin
-        error_shown := False;
         if (XNode = nil) or ((XNode.LocalName = 'line') and (XNode.NodeValue = null)) then
             Exit;
         if VNode = nil then
@@ -374,7 +373,6 @@ var
 
             // Form2.grid.Cells[ 0, Linecount ] := text;
             item.Caption := textoud;
-            parentdata := Iltree.GetNodeData(VNode.Parent);
             ButlerForm.SetListColors(Linecount, Form1.DefaultFG, Form1.DefaultBG);
 
             tdata.line := textoud;
@@ -397,6 +395,7 @@ begin (* XML2TREE *)
     Linecount := 0;
     Lineindex := 1;
     Chapindex := 1;
+    error_shown := False;
     // Form2.grid.Clear;
     // Form2.grid.RowCount := 0;
     Form1.ProgressBar1.Position := 0;
@@ -656,14 +655,14 @@ var
     TekstBuf: TStringList;
     txt: String;
     chap, line, linenumber: String;
-    i, len: Integer;
+    i: Integer;
     s, bstr, fstr: String;
 
     procedure walk(Node: PVirtualNode);
     var
         td, ttemp: ^rTreeData;
         nodetemp: PVirtualNode;
-        lvl, n: Integer;
+        lvl: Integer;
         empty: Boolean;
     begin
         if Node <> nil then
@@ -774,7 +773,7 @@ var
 
     procedure walk(Node: PVirtualNode);
     var
-        tdata, parentdata: ^rTreeData;
+        tdata: ^rTreeData;
         txt, lineID: string;
     begin
         if Node = nil then
@@ -827,7 +826,7 @@ var
 
     procedure walk(Node: PVirtualNode);
     var
-        tdata, parentdata: ^rTreeData;
+        tdata: ^rTreeData;
         txt, lineID: string;
     begin
         if Node = nil then
@@ -879,14 +878,11 @@ procedure TForm1.ColorTextlines(SetTreeColor: Boolean = True);
 var { color all lines (in Form2.grid) that are in (children of) all
       selected nodes. if SetTreeColor = false then replace color by default }
     sel: PVirtualNode;
-    seldata: ^rTreeData;
-    fgcol, bgcol: TColor;
 
     procedure NodeOut(this, last: PVirtualNode; fg, bg: TColor; setit: Boolean);
     var // this, last: firstchild, lastchild of mother node
         tdata: ^rTreeData;
         exitloop: Boolean;
-        scrollpos: Integer;
     begin
         if this = nil then
             Exit;
@@ -929,7 +925,6 @@ begin
 
     for sel in SelNodes do
     begin // more than 1 node may be selected, not consecutive
-        seldata := Form1.Iltree.GetNodeData(sel.Parent.FirstChild);
         NodeOut(sel.Parent.FirstChild, sel.Parent.LastChild, -1, 0, True);
     end;
 end; // ColorTextlines
@@ -940,8 +935,7 @@ end; // ColorTextlines
 
 procedure TForm1.ScrollToTextline(Node: PVirtualNode);
 var
-    index, newpos, oldpos, itemheight: Integer;
-    rect: TRect;
+    index: Integer;
     tdata: ^rTreeData;
 begin
     while Node.ChildCount > 0 do
@@ -1797,7 +1791,6 @@ var // drag + shift: insert after, + ctrl: insert before
     i: Integer;
     attm: TVTNodeAttachMode;
 begin
-    attm := amInsertAfter;
     target := Iltree.DropTargetNode;
     sourcenodes := Sender.GetSortedSelection(True);
     if (ssCtrl in Shift) then
@@ -1938,7 +1931,7 @@ end;
 
 procedure TForm1.GetTextLines(Sender: TBaseVirtualTree; Node: PVirtualNode; Data: Pointer; var Abort: Boolean);
 var // write the text window
-    tdata, parentdata: ^rTreeData;
+    tdata: ^rTreeData;
     item: TListItem;
 begin
     tdata := Sender.GetNodeData(Node);
@@ -2500,8 +2493,6 @@ end;
 
 // *************** CREATE DESTROY ******************
 procedure TForm1.FormCreate(Sender: TObject);
-var
-    maxed: Boolean;
 begin
     // System.ReportMemoryLeaksOnShutdown := True;
     // no access to Form2 here!
@@ -2526,9 +2517,8 @@ begin
             Form1.Top := StrToInt(Values['iltop']);
             Form1.Width := StrToInt(Values['ilwidth']);
             Form1.Height := StrToInt(Values['ilheight']);
-            maxed := StrToBool(Values['ilmaximized']);
-            if maxed then
-                Form1.WindowState := wsMaximized;
+//            if maxed then
+//                Form1.WindowState := wsMaximized;
             Form1.Font.size := StrToInt(Values['ilfontsize']);
             SpinEdit1.Value := Form1.Font.size;
             Form1.Font.name := Values['ilfont'];
@@ -2627,7 +2617,7 @@ begin
     Settings.Values['iltop'] := IntToStr(FormTop);
     Settings.Values['ilwidth'] := IntToStr(FormWidth);
     Settings.Values['ilheight'] := IntToStr(FormHeight);
-    Settings.Values['ilmaximized'] := BoolToStr(Form1.WindowState = wsMaximized);
+    //Settings.Values['ilmaximized'] := BoolToStr(Form1.WindowState = wsMaximized);
     Settings.Values['ilfontsize'] := IntToStr(Iltree.Font.size);
     Settings.Values['ilfont'] := Iltree.Font.name;
     Settings.Values['ilfileindex'] := IntToStr(choosefile.ItemIndex);

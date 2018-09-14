@@ -94,7 +94,7 @@ object SetMapForm: TSetMapForm
     Left = 0
     Top = 315
     Width = 73
-    Height = 25
+    Height = 26
     Align = alLeft
     DirList = DirectoryListBox1
     Font.Charset = DEFAULT_CHARSET
@@ -104,5 +104,6 @@ object SetMapForm: TSetMapForm
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 5
+    ExplicitHeight = 25
   end
 end

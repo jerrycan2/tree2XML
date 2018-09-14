@@ -321,9 +321,7 @@ end;
 // ********************************************************************
 procedure TButlerForm.FormCreate(Sender: TObject);
 var
-    Bnode, node: IXMLNode;
     Item: TListItem;
-    pos, chap, line: integer;
     rect: TRect;
 begin
     cards := TObjectList<TCard>.Create;
@@ -344,8 +342,6 @@ begin
 end;
 
 procedure TButlerForm.FormDestroy(Sender: TObject);
-var
-    card: TCard;
 begin
     if UndoStack.Count > 0 then
     begin
@@ -360,7 +356,7 @@ end;
 
 procedure TButlerForm.FormResize(Sender: TObject);
 var
-    h, w, wb, fs: integer;
+    h, w, fs: integer;
 begin
     fs := Form1.SpinEdit1.Value;
     GreekView.Font.Size := fs;
@@ -561,7 +557,6 @@ end;
 procedure TButlerForm.mergebuttonClick(Sender: TObject);
 var
     Item: TListItem;
-    index: integer;
     undorec: TUndoRec;
 begin
     undorec := TUndoRec.Create;
@@ -634,6 +629,7 @@ var
 begin
     n := 0;
     cards.Clear;
+    newcard := nil;
 
     try
         Inode := ButlerXMLDoc.DocumentElement.ChildNodes.first;
@@ -657,7 +653,8 @@ begin
         cards[n - 1].last.line := TLine.chaplen[24];
 
     except on E: Exception do
-        ShowMessage('xml file corrupt: '+newcard.first.GetID(id_num));
+        if newcard = nil then ShowMessage('not an xml file?')
+        else ShowMessage('xml file corrupt: '+ newcard.first.GetID(id_num));
     end;
 end;
 
@@ -714,7 +711,7 @@ end;
 
 procedure TButlerForm.ScrollTo(index: integer);
 var
-    newpos, oldpos, itemheight: integer;
+    newpos, oldpos: integer;
 begin
     oldpos := GreekView.TopItem.index * ListItemHeight;
     newpos := index * ListItemHeight;
@@ -859,7 +856,7 @@ begin
     ButlerXMLDoc := TXMLDocument.Create(Self);
     Form1.ButlerFileName := Form1.ButlerFileName;
     ButlerXMLDoc.LoadFromFile(Form1.ButlerFileName);
-    GreekView.Columns[1].Caption := 'using' + System.IOUtils.TPath.GetFileName(Form1.ButlerFileName);
+    GreekView.Columns[1].Caption := 'using ' + System.IOUtils.TPath.GetFileName(Form1.ButlerFileName);
     LoadCardsFromXML;
     ButlerXMLDoc.Free;
 end;
@@ -899,7 +896,7 @@ end;
 
 procedure TButlerForm.CreateNewDoc;
 var
-    Pnode, Anode, Hnode, Tnode: IXMLNode;
+    Pnode, Anode, Hnode: IXMLNode;
     n, book: integer;
 begin
     ButlerXMLDoc := TXMLDocument.Create(Form1);
@@ -934,7 +931,6 @@ end;
 procedure TButlerForm.CheckButlerText;
 var
     oldtext, newtext: TStringList;
-    FileName: string;
     response: integer;
     c: TCard;
 begin

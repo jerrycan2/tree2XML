@@ -30,7 +30,6 @@ object Form1: TForm1
     Color = 10865875
     ParentBackground = False
     TabOrder = 0
-    ExplicitWidth = 1016
     object Label1: TLabel
       Left = 775
       Top = 42
@@ -3745,7 +3744,6 @@ object Form1: TForm1
     OnMouseUp = IltreeMouseUp
     OnSaveNode = IltreeSaveNode
     OnStructureChange = IltreeStructureChange
-    ExplicitWidth = 1016
     Columns = <
       item
         CaptionAlignment = taCenter
@@ -3771,7 +3769,6 @@ object Form1: TForm1
       item
         Width = 50
       end>
-    ExplicitWidth = 1016
   end
   object remarks: TRichEdit
     Left = 0
@@ -3793,7 +3790,6 @@ object Form1: TForm1
     OnEnter = remarksEnter
     OnExit = remarksExit
     OnKeyDown = remarksKeyDown
-    ExplicitWidth = 1016
   end
   object XMLDocument1: TXMLDocument
     Options = [doNodeAutoCreate, doNodeAutoIndent, doAttrNull, doAutoPrefix, doNamespaceDecl]

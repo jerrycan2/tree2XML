@@ -48,7 +48,6 @@ type
         procedure LumBarChange(Sender: TObject);
         procedure HueBarChange(Sender: TObject);
         procedure pickbtnClick(Sender: TObject);
-        procedure SetFGClick(Sender: TObject);
         procedure resetbtnClick(Sender: TObject);
         procedure fetchbtnClick(Sender: TObject);
         procedure SetBothBtnClick(Sender: TObject);
@@ -131,8 +130,6 @@ begin
 end;
 
 procedure TForm3.SetResultBoxColor(color: TColor);
-var
-    S: string;
 begin
     if SetFG.Checked then
     begin
@@ -224,8 +221,6 @@ procedure TForm3.fetchbtnClick(Sender: TObject);
 var // refresh color data from first selected node/
     tn: PVirtualNode;
     td: ^rTreeData;
-    kleur: TColor;
-    save: boolean;
 begin
     tn := Form1.Iltree.GetFirstSelected;
     if tn <> nil then
@@ -281,17 +276,6 @@ begin
         Form1.SetNodeFGColor(Sresultbox.Font.color);
     end;
     fetchbtnClick(nil);
-end;
-
-procedure TForm3.SetFGClick(Sender: TObject);
-var
-    kleur: TColor;
-begin
-    if not SetFG.Checked then
-        kleur := Sresultbox.color
-    else
-        kleur := Sresultbox.Font.color;
-    // davColorBox1Select( nil, kleur );
 end;
 
 procedure TForm3.LumBarChange(Sender: TObject);
@@ -378,17 +362,14 @@ end;
 procedure TForm3.HPanel1MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var
     i, n: Integer;
-    found: boolean;
     steps: Integer;
 begin
     if ssShift in Shift then
     begin
-        found := False;
         for i := 0 to High(HColors) do
         begin
             if (Sender as TPanel) = HColors[i] then
             begin
-                found := true;
                 break;
             end;
         end;
