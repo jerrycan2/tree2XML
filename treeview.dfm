@@ -356,7 +356,7 @@ object Form1: TForm1
     end
     object loadxmlbtn: TBitBtn
       Left = 3
-      Top = 46
+      Top = 43
       Width = 42
       Height = 42
       Hint = 'load XML'
@@ -2074,8 +2074,8 @@ object Form1: TForm1
       OnClick = GreekHiddenClick
     end
     object choosefile: TComboBox
-      Left = 47
-      Top = 64
+      Left = 51
+      Top = 61
       Width = 90
       Height = 24
       Color = 10865875

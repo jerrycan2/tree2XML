@@ -1210,6 +1210,7 @@ var
     n: Integer;
 begin // sets ChooseDir.WorkDir also sets working dir for .SaveToFile etc.
     choosefile.Items.Clear;
+    choosefile.Items.Add('browse');
     StatusBar1.Panels[1].text := 'set working directory';
     SetMapForm.ShowModal;
     for n := 0 to ChooseDir.SetMapForm.FileListBox1.Items.Count - 1 do
@@ -2189,12 +2190,17 @@ begin
         if ok = mrCancel then
             Exit;
     end;
-    OpenDialog1.Title := 'Loading Tree XML';
-    if not OpenDialog1.Execute then
-        Exit;
 
-    // XMLfilename := choosefile.Items[ choosefile.ItemIndex ];
-    XMLfilename := OpenDialog1.filename;
+    if choosefile.Items[ choosefile.ItemIndex ] = 'browse' then
+    begin
+        OpenDialog1.Title := 'Loading Tree XML';
+        if not OpenDialog1.Execute then
+            Exit;
+        XMLfilename := OpenDialog1.filename;
+    end
+    else begin
+        XMLfilename := choosefile.Items[ choosefile.ItemIndex ];
+    end;
 
     if not FileExists(XMLfilename) then
     begin
@@ -2451,44 +2457,7 @@ end;
   end; }
 
 procedure TForm1.choosefileKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-var
-    txt: string;
-    i: Integer;
-    found: Boolean;
 begin
-    StatusBar1.Panels[1].text := 'add, change or delete an entry in the list';
-    if Key = VK_RETURN then
-    begin
-        found := false;
-        if choosefile.text <> '' then
-        begin
-            for i := 0 to choosefile.Items.Count - 1 do
-                if choosefile.Items[i] = choosefile.text then
-                begin
-                    found := True;
-                    break;
-                end;
-            if not found then
-                choosefile.Items.Append(choosefile.text);
-        end;
-    end
-    else if Key = VK_DELETE then
-    begin
-        txt := choosefile.Items[choosefile.ItemIndex];
-        if txt <> '' then
-        begin
-            found := false;
-            for i := 0 to choosefile.Items.Count - 1 do
-                if choosefile.Items[i] = choosefile.text then
-                begin
-                    found := True;
-                    break;
-                end;
-            if found then
-                choosefile.Items.Delete(i);
-        end;
-
-    end;
 end;
 
 // *************** CREATE DESTROY ******************
@@ -2522,7 +2491,7 @@ begin
             Form1.Font.size := StrToInt(Values['ilfontsize']);
             SpinEdit1.Value := Form1.Font.size;
             Form1.Font.name := Values['ilfont'];
-            choosefile.Items.CommaText := Values['ilfiles'];
+            choosefile.Items.CommaText := 'browse,' + Values['ilfiles'];
             choosefile.ItemIndex := StrToInt(Values['ilfileindex']);
             autosave.State := TCheckBoxState(StrToInt(Values['autosave']));
             autoload.State := TCheckBoxState(StrToInt(Values['autoload']));

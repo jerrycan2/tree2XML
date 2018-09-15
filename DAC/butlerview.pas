@@ -86,12 +86,6 @@ type
 type
     TButlerForm = class(TForm)
         Panel1: TPanel;
-        prevPanel: TPanel;
-        prevMemo: TMemo;
-        thisPanel: TPanel;
-        thisMemo: TMemo;
-        nextPanel: TPanel;
-        nextMemo: TMemo;
         MainMenu1: TMainMenu;
         file1: TMenuItem;
         load1: TMenuItem;
@@ -100,12 +94,20 @@ type
         check1: TMenuItem;
         Panel2: TPanel;
         GreekView: TListView;
-        Splitter1: TSplitter;
         undobutton: TButton;
         splitbutton: TButton;
         mergebutton: TButton;
         Button2: TButton;
     helpbutton: TBitBtn;
+    StatusBar1: TStatusBar;
+    Splitter1: TSplitter;
+    Panel3: TPanel;
+    nextMemo: TMemo;
+    nextPanel: TPanel;
+    thisMemo: TMemo;
+    thisPanel: TPanel;
+    prevMemo: TMemo;
+    prevPanel: TPanel;
         procedure FormCreate(Sender: TObject);
         procedure GreekViewSelectItem(Sender: TObject; Item: TListItem; Selected: boolean);
         procedure FormDestroy(Sender: TObject);
@@ -378,6 +380,8 @@ begin
     thisMemo.Height := h;
     nextMemo.Height := h;
     prevMemo.Height := h;
+    StatusBar1.Panels[0].Width := StatusBar1.Width div 2;
+    StatusBar1.Panels[1].Width := StatusBar1.Width - StatusBar1.Panels[0].Width;
 
 end;
 
@@ -471,6 +475,7 @@ begin
     cards[CurrentCardNr - 1].text := prevMemo.text;
     cards[CurrentCardNr + 1].text := nextMemo.text;
     GreekViewSelectItem(nil, searchLine(new_card_first), false);
+    StatusBar1.Panels[1].Text := 'set: ' + cards[CurrentCardNr].first.GetID(id_num);
 end;
 
 procedure TButlerForm.ClearCheckStack;
@@ -552,6 +557,7 @@ begin
     thisMemo.SetSelText('');
     oldcard.text := thisMemo.text;
     GreekViewSelectItem(nil, firstitem, false);
+    StatusBar1.Panels[1].Text := 'split: ' + cards[CurrentCardNr].first.GetID(id_num);
 end;
 
 procedure TButlerForm.mergebuttonClick(Sender: TObject);
@@ -577,6 +583,7 @@ begin
     Item := searchLine(cards[CurrentCardNr].first);
     cards.Delete(CurrentCardNr + 1);
     GreekViewSelectItem(nil, Item, false);
+    StatusBar1.Panels[1].Text := 'merge: ' + cards[CurrentCardNr].first.GetID(id_num);
 end;
 
 procedure TButlerForm.undobuttonClick(Sender: TObject);
@@ -584,6 +591,7 @@ var
     card: TCard;
     Item: TListItem;
     undorec: TUndoRec;
+    status: String;
 begin
     if UndoStack.Count = 0 then
         exit;
@@ -600,10 +608,12 @@ begin
                 card.last := undorec.nextlast;
                 card.text := undorec.nexttext;
                 cards.Insert(CurrentCardNr + 1, card);
+                status := 'Undo Merge: ';
             end;
         undo_type.u_split:
             begin
                 cards.Delete(CurrentCardNr + 1);
+                status := 'Undo Split: ';
             end;
         undo_type.u_set:
             begin
@@ -613,12 +623,14 @@ begin
                 cards[CurrentCardNr+1].first := undorec.nextfirst;
                 cards[CurrentCardNr+1].last := undorec.nextlast;
                 cards[CurrentCardNr+1].text := undorec.nexttext;
+                status := 'Undo Set: ';
             end;
         end;
     Item := searchLine(cards[CurrentCardNr].first);
     GreekViewSelectItem(nil, Item, false);
     // undorec.Free;
     undobutton.Caption := IntToStr(UndoStack.Count);
+    StatusBar1.Panels[1].Text := status + cards[CurrentCardNr-1].first.GetID(id_num);
 end;
 
 procedure TButlerForm.LoadCardsFromXML;
@@ -856,7 +868,7 @@ begin
     ButlerXMLDoc := TXMLDocument.Create(Self);
     Form1.ButlerFileName := Form1.ButlerFileName;
     ButlerXMLDoc.LoadFromFile(Form1.ButlerFileName);
-    GreekView.Columns[1].Caption := 'using ' + System.IOUtils.TPath.GetFileName(Form1.ButlerFileName);
+    StatusBar1.Panels[0].Text := 'using ' + System.IOUtils.TPath.GetFullPath(Form1.ButlerFileName);
     LoadCardsFromXML;
     ButlerXMLDoc.Free;
 end;
@@ -898,6 +910,7 @@ procedure TButlerForm.CreateNewDoc;
 var
     Pnode, Anode, Hnode: IXMLNode;
     n, book: integer;
+    filename: string;
 begin
     ButlerXMLDoc := TXMLDocument.Create(Form1);
     ButlerXMLDoc.Active := True;
@@ -919,8 +932,10 @@ begin
         Anode.NodeValue := cards[n].first.GetID(id_num);
         inc(n);
     end;
-    Form1.RenameBackups('Butlertext');
-    ButlerXMLDoc.SaveToFile('Butlertext.xml');
+    filename := System.IOUtils.TPath.GetFileNameWithoutExtension(Form1.ButlerFileName);
+    Form1.RenameBackups(filename);
+    ButlerXMLDoc.SaveToFile(filename + '.xml');
+    StatusBar1.Panels[0].Text := 'saved ' + System.IOUtils.TPath.GetFullPath(Form1.ButlerFileName);
 end;
 
 procedure TButlerForm.check1Click(Sender: TObject);

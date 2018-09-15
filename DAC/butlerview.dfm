@@ -2,7 +2,7 @@ object ButlerForm: TButlerForm
   Left = 0
   Top = 0
   Caption = 'Divide And Conquer'
-  ClientHeight = 854
+  ClientHeight = 897
   ClientWidth = 1160
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,112 +18,139 @@ object ButlerForm: TButlerForm
   OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
-  object Splitter1: TSplitter
+  object Panel1: TPanel
     Left = 513
     Top = 33
-    Width = 16
-    Height = 821
-    ExplicitLeft = 514
-    ExplicitTop = 1
-    ExplicitHeight = 780
-  end
-  object Panel1: TPanel
-    Left = 529
-    Top = 33
-    Width = 631
-    Height = 821
+    Width = 647
+    Height = 840
     Align = alClient
     Caption = 'Panel1'
     TabOrder = 0
-    object prevPanel: TPanel
+    ExplicitTop = 35
+    object Splitter1: TSplitter
       Left = 1
       Top = 1
-      Width = 629
-      Height = 24
-      Align = alTop
-      Alignment = taLeftJustify
-      Caption = 'prevPanel'
-      Color = 13089921
-      ParentBackground = False
-      TabOrder = 0
-      OnClick = prevPanelClick
+      Width = 10
+      Height = 838
+      Color = clGray
+      ParentColor = False
     end
-    object prevMemo: TMemo
-      Left = 1
-      Top = 25
-      Width = 629
-      Height = 208
-      Align = alTop
-      Color = 13089921
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Lines.Strings = (
-        'prevMemo')
-      ParentFont = False
-      TabOrder = 1
-    end
-    object thisPanel: TPanel
-      Left = 1
-      Top = 233
-      Width = 629
-      Height = 24
-      Align = alTop
-      Alignment = taLeftJustify
-      Caption = 'thisPanel'
-      Color = 11309024
-      ParentBackground = False
-      TabOrder = 2
-      OnClick = thisPanelClick
-    end
-    object thisMemo: TMemo
-      Left = 1
-      Top = 257
-      Width = 629
-      Height = 288
-      Align = alTop
-      Color = 11309024
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Lines.Strings = (
-        'thisMemo')
-      ParentFont = False
-      TabOrder = 3
-    end
-    object nextPanel: TPanel
-      Left = 1
-      Top = 545
-      Width = 629
-      Height = 24
-      Align = alTop
-      Alignment = taLeftJustify
-      Caption = 'nextPanel'
-      Color = 10538381
-      ParentBackground = False
-      TabOrder = 4
-      OnClick = nextPanelClick
-    end
-    object nextMemo: TMemo
-      Left = 1
-      Top = 569
-      Width = 629
-      Height = 251
+    object Panel3: TPanel
+      Left = 11
+      Top = 1
+      Width = 635
+      Height = 838
       Align = alClient
-      Color = 10538381
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Lines.Strings = (
-        'nextMemo')
-      ParentFont = False
-      TabOrder = 5
+      Caption = 'Panel3'
+      TabOrder = 0
+      ExplicitLeft = 248
+      ExplicitTop = 248
+      ExplicitWidth = 185
+      ExplicitHeight = 41
+      object nextMemo: TMemo
+        Left = 1
+        Top = 599
+        Width = 633
+        Height = 238
+        Align = alClient
+        Color = 10538381
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        Lines.Strings = (
+          'nextMemo')
+        ParentFont = False
+        TabOrder = 0
+        ExplicitTop = 584
+        ExplicitWidth = 627
+        ExplicitHeight = 253
+      end
+      object nextPanel: TPanel
+        Left = 1
+        Top = 575
+        Width = 633
+        Height = 24
+        Align = alTop
+        Alignment = taLeftJustify
+        Caption = 'nextPanel'
+        Color = 10538381
+        ParentBackground = False
+        TabOrder = 1
+        OnClick = nextPanelClick
+        ExplicitTop = 545
+        ExplicitWidth = 629
+      end
+      object thisMemo: TMemo
+        Left = 1
+        Top = 287
+        Width = 633
+        Height = 288
+        Align = alTop
+        Color = 11309024
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        Lines.Strings = (
+          'thisMemo')
+        ParentFont = False
+        TabOrder = 2
+        ExplicitLeft = 6
+        ExplicitTop = 545
+        ExplicitWidth = 627
+      end
+      object thisPanel: TPanel
+        Left = 1
+        Top = 260
+        Width = 633
+        Height = 27
+        Align = alTop
+        Alignment = taLeftJustify
+        Caption = 'thisPanel'
+        Color = 11309024
+        ParentBackground = False
+        TabOrder = 3
+        OnClick = thisPanelClick
+        ExplicitTop = 233
+        ExplicitWidth = 627
+      end
+      object prevMemo: TMemo
+        Left = 1
+        Top = 25
+        Width = 633
+        Height = 235
+        Align = alTop
+        Color = 13089921
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        Lines.Strings = (
+          'prevMemo')
+        ParentFont = False
+        TabOrder = 4
+        ExplicitWidth = 627
+      end
+      object prevPanel: TPanel
+        Left = 1
+        Top = 1
+        Width = 633
+        Height = 24
+        Align = alTop
+        Alignment = taLeftJustify
+        Caption = 'prevPanel'
+        Color = 13089921
+        ParentBackground = False
+        TabOrder = 5
+        OnClick = prevPanelClick
+        ExplicitLeft = 2
+        ExplicitTop = 9
+        ExplicitWidth = 627
+      end
     end
   end
   object Panel2: TPanel
@@ -374,7 +401,7 @@ object ButlerForm: TButlerForm
     Left = 0
     Top = 33
     Width = 513
-    Height = 821
+    Height = 840
     Align = alLeft
     Checkboxes = True
     Color = clInfoBk
@@ -407,6 +434,23 @@ object ButlerForm: TButlerForm
     OnCustomDrawItem = GreekViewCustomDrawItem
     OnCustomDrawSubItem = GreekViewCustomDrawSubItem
     OnSelectItem = GreekViewSelectItem
+    ExplicitHeight = 768
+  end
+  object StatusBar1: TStatusBar
+    Left = 0
+    Top = 873
+    Width = 1160
+    Height = 24
+    Panels = <
+      item
+        Width = 50
+      end
+      item
+        Width = 50
+      end>
+    ExplicitLeft = -2
+    ExplicitTop = 827
+    ExplicitWidth = 1158
   end
   object MainMenu1: TMainMenu
     Left = 857
