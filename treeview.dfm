@@ -1,6 +1,7 @@
 object Form1: TForm1
   Left = 0
   Top = 80
+  ActiveControl = Iltree
   Caption = 'The Iliad: a structural analysis'
   ClientHeight = 736
   ClientWidth = 1046
@@ -8,7 +9,7 @@ object Form1: TForm1
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clTeal
   Font.Height = -16
-  Font.Name = 'Lucida Sans Unicode'
+  Font.Name = 'Tahoma'
   Font.Style = []
   Menu = MainMenu1
   OldCreateOrder = False
@@ -20,7 +21,7 @@ object Form1: TForm1
   OnDestroy = FormDestroy
   OnResize = FormResize
   PixelsPerInch = 96
-  TextHeight = 20
+  TextHeight = 19
   object Panel1: TPanel
     Left = 0
     Top = 0
@@ -1798,6 +1799,7 @@ object Form1: TForm1
       ParentFont = False
       TabOrder = 18
       Value = 12
+      OnChange = SpinEdit1Change
     end
     object clearselbm: TPanel
       Left = 533
@@ -2088,7 +2090,7 @@ object Form1: TForm1
       TabOrder = 25
       Text = 'choosefile'
       OnClick = choosefileClick
-      OnKeyDown = choosefileKeyDown
+      OnMouseEnter = choosefileMouseEnter
     end
     object ProgressBar1: TProgressBar
       Left = 139
@@ -3769,6 +3771,7 @@ object Form1: TForm1
       item
         Width = 50
       end>
+    OnMouseEnter = StatusBar1MouseEnter
   end
   object remarks: TRichEdit
     Left = 0
@@ -3776,14 +3779,8 @@ object Form1: TForm1
     Width = 1046
     Height = 94
     Align = alTop
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clTeal
-    Font.Height = -16
-    Font.Name = 'Lucida Sans Unicode'
-    Font.Style = []
     Lines.Strings = (
       'remarks')
-    ParentFont = False
     TabOrder = 3
     Visible = False
     Zoom = 100

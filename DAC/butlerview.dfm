@@ -7,8 +7,8 @@ object ButlerForm: TButlerForm
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
+  Font.Height = -16
+  Font.Name = 'Lucida Sans Unicode'
   Font.Style = []
   Menu = MainMenu1
   OldCreateOrder = False
@@ -17,14 +17,15 @@ object ButlerForm: TButlerForm
   OnDestroy = FormDestroy
   OnResize = FormResize
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 20
   object Splitter1: TSplitter
     Left = 513
     Top = 33
     Width = 7
-    Height = 840
+    Height = 843
     Color = clSilver
     ParentColor = False
+    ExplicitHeight = 840
   end
   object Panel2: TPanel
     Left = 0
@@ -274,7 +275,7 @@ object ButlerForm: TButlerForm
     Left = 0
     Top = 33
     Width = 513
-    Height = 840
+    Height = 843
     Align = alLeft
     Checkboxes = True
     Color = clInfoBk
@@ -291,30 +292,25 @@ object ButlerForm: TButlerForm
       end>
     ColumnClick = False
     DoubleBuffered = True
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -16
-    Font.Name = 'Tahoma'
-    Font.Style = []
     HoverTime = 0
     StyleElements = [seClient, seBorder]
     ReadOnly = True
     RowSelect = True
     ParentDoubleBuffered = False
-    ParentFont = False
     TabOrder = 1
     ViewStyle = vsReport
     OnCustomDrawItem = GreekViewCustomDrawItem
     OnCustomDrawSubItem = GreekViewCustomDrawSubItem
     OnSelectItem = GreekViewSelectItem
-    ExplicitLeft = -5
+    ExplicitLeft = 1
     ExplicitTop = 39
+    ExplicitHeight = 840
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 873
+    Top = 876
     Width = 1160
-    Height = 24
+    Height = 21
     Panels = <
       item
         Width = 50
@@ -322,15 +318,13 @@ object ButlerForm: TButlerForm
       item
         Width = 50
       end>
-    ExplicitLeft = -2
-    ExplicitTop = 827
-    ExplicitWidth = 1158
+    ExplicitTop = 877
   end
   object Panel3: TPanel
     Left = 520
     Top = 33
     Width = 640
-    Height = 840
+    Height = 843
     Align = alClient
     Caption = 'Panel3'
     TabOrder = 3
@@ -342,17 +336,11 @@ object ButlerForm: TButlerForm
       Left = 1
       Top = 599
       Width = 638
-      Height = 240
+      Height = 243
       Align = alClient
       Color = 10538381
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'Tahoma'
-      Font.Style = []
       Lines.Strings = (
         'nextMemo')
-      ParentFont = False
       TabOrder = 0
       ExplicitTop = 584
       ExplicitWidth = 627
@@ -379,14 +367,8 @@ object ButlerForm: TButlerForm
       Height = 288
       Align = alTop
       Color = 11309024
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'Tahoma'
-      Font.Style = []
       Lines.Strings = (
         'thisMemo')
-      ParentFont = False
       TabOrder = 2
       ExplicitLeft = 0
       ExplicitTop = 281
@@ -413,14 +395,8 @@ object ButlerForm: TButlerForm
       Height = 235
       Align = alTop
       Color = 13089921
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'Tahoma'
-      Font.Style = []
       Lines.Strings = (
         'prevMemo')
-      ParentFont = False
       TabOrder = 4
       ExplicitWidth = 627
     end

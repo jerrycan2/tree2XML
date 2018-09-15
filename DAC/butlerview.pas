@@ -325,6 +325,7 @@ var
     Item: TListItem;
     rect: TRect;
 begin
+    Font.Name := Form1.Font.Name;
     cards := TObjectList<TCard>.Create;
     cards.OwnsObjects := True;
     CheckedItemStack := TStack<TListItem>.Create;
@@ -360,10 +361,7 @@ var
     h, w, fs: integer;
 begin
     fs := Form1.SpinEdit1.Value;
-    GreekView.Font.Size := fs;
-    thisMemo.Font.Size := fs;
-    nextMemo.Font.Size := fs;
-    prevMemo.Font.Size := fs;
+    Font.Size := fs;
     Top := Form1.Top;
     Height := Form1.Height;
     w := Screen.Width - (Form1.Left + Form1.Width + 10);

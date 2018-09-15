@@ -109,7 +109,6 @@ type
           var Result: Integer);
         procedure IltreeExpanding(Sender: TBaseVirtualTree; Node: PVirtualNode; var Allowed: Boolean);
         procedure RadioGroup1Click(Sender: TObject);
-        procedure choosefileKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
         procedure textboxKeyPress(Sender: TObject; var Key: Char);
         procedure textboxExit(Sender: TObject);
         procedure bookmarkbtnClick(Sender: TObject);
@@ -155,6 +154,8 @@ type
         procedure greek2html;
         procedure greek2dat;
         procedure ColorTextlines(SetTreeColor: Boolean = True);
+    procedure StatusBar1MouseEnter(Sender: TObject);
+    procedure choosefileMouseEnter(Sender: TObject);
 
     private
         EditingBookmark: Boolean;
@@ -1014,8 +1015,13 @@ begin
     Iltree.DefaultNodeHeight := newheight;
     Iltree.IterateSubtree(nil, setheight, @newheight, [], false, false); // takes some time
     Form1.FormResize(nil);
-    ButlerForm.FormResize(nil);
-    Iltree.SetFocus;
+    if ButlerForm <> nil then ButlerForm.FormResize(nil);
+//    Iltree.SetFocus;
+end;
+
+procedure TForm1.StatusBar1MouseEnter(Sender: TObject);
+begin
+    StatusBar1.Hint := StatusBar1.Panels[0].text;
 end;
 
 procedure TForm1.textboxExit(Sender: TObject);
@@ -1987,6 +1993,7 @@ begin
         StatusBar1.Panels[1].text := 'Loading .undo-file';
         filename := 'iltree.undo';
     end;
+    StatusBar1.Panels[0].text := 'loaded: ' + ChooseDir.WorkDir + '/' + filename;
     if Iltree.TopNode.ChildCount > 0 then
     begin
         ok := MessageDlg('Tree not empty. Load a new one?', mtWarning, mbOKCancel, 0);
@@ -2236,6 +2243,8 @@ begin
         Iltree.Header.Columns[i].text := IntToStr(i);
         Iltree.Header.Columns[i].CaptionAlignment := taCenter;
     end;
+    StatusBar1.Panels[0].text := 'Working with: ' + ChooseDir.WorkDir + '\' + XMLfilename;
+
     // Form2.grid.Row := 0;
     // Form2.grid.Col := 1;
     // Form2.grid.SetFocus;
@@ -2287,7 +2296,7 @@ end;
 
 procedure TForm1.collapsebtnClick(Sender: TObject);
 begin
-    StatusBar1.Panels[1].text := 'Collapse lowest level of the tree';
+    StatusBar1.Panels[1].text := 'Collapse highest level of the tree';
     DownLevelClick(Sender);
 end;
 
@@ -2456,8 +2465,9 @@ end;
   end;
   end; }
 
-procedure TForm1.choosefileKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+procedure TForm1.choosefileMouseEnter(Sender: TObject);
 begin
+    choosefile.Hint := 'dir: ' + ChooseDir.WorkDir;
 end;
 
 // *************** CREATE DESTROY ******************
@@ -2486,11 +2496,9 @@ begin
             Form1.Top := StrToInt(Values['iltop']);
             Form1.Width := StrToInt(Values['ilwidth']);
             Form1.Height := StrToInt(Values['ilheight']);
-//            if maxed then
-//                Form1.WindowState := wsMaximized;
             Form1.Font.size := StrToInt(Values['ilfontsize']);
             SpinEdit1.Value := Form1.Font.size;
-            Form1.Font.name := Values['ilfont'];
+//            Form1.Font.name := Values['ilfont'];
             choosefile.Items.CommaText := 'browse,' + Values['ilfiles'];
             choosefile.ItemIndex := StrToInt(Values['ilfileindex']);
             autosave.State := TCheckBoxState(StrToInt(Values['autosave']));
@@ -2505,8 +2513,6 @@ begin
 
     StatusBar1.Panels[0].Width := StatusBar1.Width - 400;
     StatusBar1.Panels[1].Width := 400;
-    StatusBar1.Panels[0].text := 'Working with: ' + ChooseDir.WorkDir + '\' + choosefile.Items[choosefile.ItemIndex];
-    choosefile.Hint := StatusBar1.Panels[0].text;
 
     SpinEdit1.OnChange := SpinEdit1Change;
     Iltree.NodeDataSize := SizeOf(rTreeData);
@@ -2588,8 +2594,10 @@ begin
     Settings.Values['ilheight'] := IntToStr(FormHeight);
     //Settings.Values['ilmaximized'] := BoolToStr(Form1.WindowState = wsMaximized);
     Settings.Values['ilfontsize'] := IntToStr(Iltree.Font.size);
-    Settings.Values['ilfont'] := Iltree.Font.name;
+    //Settings.Values['ilfont'] := Iltree.Font.name;
     Settings.Values['ilfileindex'] := IntToStr(choosefile.ItemIndex);
+    while choosefile.Items[0] = 'browse' do choosefile.Items.Delete(0);
+
     Settings.Values['ilfiles'] := choosefile.Items.CommaText;
     Settings.Values['autosave'] := IntToStr(Integer(autosave.State));
     Settings.Values['autoload'] := IntToStr(Integer(autoload.State));
