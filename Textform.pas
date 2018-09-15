@@ -29,7 +29,7 @@ type
     procedure LookupListKeyPress(Sender: TObject; var Key: Char);
     procedure GoWordClick(Sender: TObject);
     procedure GoLineClick(Sender: TObject);
-    procedure gridSelectCell(Sender: TObject; ACol, ARow: Integer;
+    procedure gridSelectCell(Sender: TObject; ACol, ARow: Integer; 
       var CanSelect: Boolean);
     procedure gridDrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect;
       State: TGridDrawState);
