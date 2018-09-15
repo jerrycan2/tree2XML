@@ -85,7 +85,6 @@ type
 
 type
     TButlerForm = class(TForm)
-        Panel1: TPanel;
         MainMenu1: TMainMenu;
         file1: TMenuItem;
         load1: TMenuItem;
@@ -100,7 +99,6 @@ type
         Button2: TButton;
     helpbutton: TBitBtn;
     StatusBar1: TStatusBar;
-    Splitter1: TSplitter;
     Panel3: TPanel;
     nextMemo: TMemo;
     nextPanel: TPanel;
@@ -108,6 +106,7 @@ type
     thisPanel: TPanel;
     prevMemo: TMemo;
     prevPanel: TPanel;
+    Splitter1: TSplitter;
         procedure FormCreate(Sender: TObject);
         procedure GreekViewSelectItem(Sender: TObject; Item: TListItem; Selected: boolean);
         procedure FormDestroy(Sender: TObject);
