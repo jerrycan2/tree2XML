@@ -270,6 +270,20 @@ object ButlerForm: TButlerForm
       StyleElements = []
       OnClick = helpbuttonClick
     end
+    object uncheckAll: TPanel
+      AlignWithMargins = True
+      Left = 600
+      Top = 4
+      Width = 105
+      Height = 25
+      Margins.Right = 48
+      Align = alRight
+      Caption = 'uncheck all'
+      Color = 11309024
+      ParentBackground = False
+      TabOrder = 5
+      OnClick = uncheckAllClick
+    end
   end
   object GreekView: TListView
     Left = 0
@@ -293,6 +307,7 @@ object ButlerForm: TButlerForm
     ColumnClick = False
     DoubleBuffered = True
     HoverTime = 0
+    MultiSelect = True
     StyleElements = [seClient, seBorder]
     ReadOnly = True
     RowSelect = True
@@ -302,9 +317,6 @@ object ButlerForm: TButlerForm
     OnCustomDrawItem = GreekViewCustomDrawItem
     OnCustomDrawSubItem = GreekViewCustomDrawSubItem
     OnSelectItem = GreekViewSelectItem
-    ExplicitLeft = 1
-    ExplicitTop = 39
-    ExplicitHeight = 840
   end
   object StatusBar1: TStatusBar
     Left = 0
@@ -318,7 +330,6 @@ object ButlerForm: TButlerForm
       item
         Width = 50
       end>
-    ExplicitTop = 877
   end
   object Panel3: TPanel
     Left = 520
@@ -328,10 +339,6 @@ object ButlerForm: TButlerForm
     Align = alClient
     Caption = 'Panel3'
     TabOrder = 3
-    ExplicitLeft = 16
-    ExplicitTop = 1
-    ExplicitWidth = 630
-    ExplicitHeight = 838
     object nextMemo: TMemo
       Left = 1
       Top = 599
@@ -341,10 +348,8 @@ object ButlerForm: TButlerForm
       Color = 10538381
       Lines.Strings = (
         'nextMemo')
+      ScrollBars = ssVertical
       TabOrder = 0
-      ExplicitTop = 584
-      ExplicitWidth = 627
-      ExplicitHeight = 253
     end
     object nextPanel: TPanel
       Left = 1
@@ -358,7 +363,6 @@ object ButlerForm: TButlerForm
       ParentBackground = False
       TabOrder = 1
       OnClick = nextPanelClick
-      ExplicitWidth = 628
     end
     object thisMemo: TMemo
       Left = 1
@@ -369,10 +373,8 @@ object ButlerForm: TButlerForm
       Color = 11309024
       Lines.Strings = (
         'thisMemo')
+      ScrollBars = ssVertical
       TabOrder = 2
-      ExplicitLeft = 0
-      ExplicitTop = 281
-      ExplicitWidth = 628
     end
     object thisPanel: TPanel
       Left = 1
@@ -386,7 +388,6 @@ object ButlerForm: TButlerForm
       ParentBackground = False
       TabOrder = 3
       OnClick = thisPanelClick
-      ExplicitWidth = 628
     end
     object prevMemo: TMemo
       Left = 1
@@ -397,8 +398,8 @@ object ButlerForm: TButlerForm
       Color = 13089921
       Lines.Strings = (
         'prevMemo')
+      ScrollBars = ssVertical
       TabOrder = 4
-      ExplicitWidth = 627
     end
     object prevPanel: TPanel
       Left = 1
@@ -412,7 +413,6 @@ object ButlerForm: TButlerForm
       ParentBackground = False
       TabOrder = 5
       OnClick = prevPanelClick
-      ExplicitWidth = 628
     end
   end
   object MainMenu1: TMainMenu

@@ -107,6 +107,7 @@ type
     prevMemo: TMemo;
     prevPanel: TPanel;
     Splitter1: TSplitter;
+    uncheckAll: TPanel;
         procedure FormCreate(Sender: TObject);
         procedure GreekViewSelectItem(Sender: TObject; Item: TListItem; Selected: boolean);
         procedure FormDestroy(Sender: TObject);
@@ -137,6 +138,7 @@ type
         procedure LoadCardsFromXML;
     procedure helpbuttonClick(Sender: TObject);
     procedure load1Click(Sender: TObject);
+    procedure uncheckAllClick(Sender: TObject);
     private
         cards: TObjectList<TCard>;
         CheckedItemStack: TStack<TListItem>;
@@ -812,6 +814,11 @@ begin
         if diff > 0 then
             ScrollTo(GreekView.TopItem.index + diff);
     end;
+end;
+
+procedure TButlerForm.uncheckAllClick(Sender: TObject);
+begin
+    ClearCheckStack;
 end;
 
 procedure TButlerForm.prevPanelClick(Sender: TObject);
