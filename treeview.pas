@@ -1770,7 +1770,9 @@ begin
             end
             else // move to nodetodel.parent
                 for i := 0 to ChildCount - 1 do
+                begin
                     Iltree.MoveTo(sourcenodes[n].FirstChild, nodetodel.Parent, amAddChildLast, false);
+                end;
 
             Iltree.FocusedNode := nodetodel.Parent;
             Iltree.Selected[nodetodel.Parent] := True;

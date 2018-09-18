@@ -3779,8 +3779,14 @@ object Form1: TForm1
     Width = 1046
     Height = 94
     Align = alTop
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clTeal
+    Font.Height = -16
+    Font.Name = 'Tahoma'
+    Font.Style = []
     Lines.Strings = (
       'remarks')
+    ParentFont = False
     TabOrder = 3
     Visible = False
     Zoom = 100

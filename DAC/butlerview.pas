@@ -327,6 +327,9 @@ var
     Item: TListItem;
     rect: TRect;
 begin
+{$IFDEF Debug}
+    System.ReportMemoryLeaksOnShutdown := true;
+{$ENDIF}
     Font.Name := Form1.Font.Name;
     cards := TObjectList<TCard>.Create;
     cards.OwnsObjects := True;
@@ -444,7 +447,7 @@ begin
     if bottom and (not checking.is_firstline) and (searchLine(checking.previous).Checked = True) then
     begin
         ShowMessage('checkmarks out of range');
-        CheckedItemStack.Clear;
+        ClearCheckStack;
         exit;
     end;
 
@@ -454,7 +457,7 @@ begin
         if Item.Checked then
         begin
             ShowMessage('non-consecutive checkmarks');
-            CheckedItemStack.Clear;
+            ClearCheckStack;
             exit;
         end;
         checking := checking.previous;
@@ -627,7 +630,7 @@ begin
         end;
     Item := searchLine(cards[CurrentCardNr].first);
     GreekViewSelectItem(nil, Item, false);
-    // undorec.Free;
+    undorec.Free;
     undobutton.Caption := IntToStr(UndoStack.Count);
     StatusBar1.Panels[1].Text := status + cards[CurrentCardNr-1].first.GetID(id_num);
 end;
