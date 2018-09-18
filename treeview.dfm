@@ -481,12 +481,12 @@ object Form1: TForm1
       StyleElements = []
       OnClick = loadxmlbtnClick
     end
-    object savexmlbtn: TBitBtn
+    object savebtn: TBitBtn
       Left = 3
       Top = 4
       Width = 42
       Height = 42
-      Hint = 'save XML'
+      Hint = 'show save form'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clTeal
       Font.Height = -13
@@ -584,7 +584,7 @@ object Form1: TForm1
       ShowHint = True
       TabOrder = 3
       StyleElements = []
-      OnClick = savexmlbtnClick
+      OnClick = savebtnClick
     end
     object autosave: TCheckBox
       Left = 47
@@ -1763,25 +1763,9 @@ object Form1: TForm1
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
       ParentFont = False
-      TabOrder = 17
+      TabOrder = 16
       StyleElements = []
       OnClick = bookmarkbtnClick
-    end
-    object Button1: TButton
-      Left = 47
-      Top = 39
-      Width = 90
-      Height = 25
-      Hint = 'save tree + attributes as HTML'
-      Caption = 'save HTML'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clTeal
-      Font.Height = -13
-      Font.Name = 'Lucida Sans Unicode'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 16
-      OnClick = HTMLButtonClick
     end
     object SpinEdit1: TSpinEdit
       Left = 775
@@ -1797,7 +1781,7 @@ object Form1: TForm1
       MaxValue = 18
       MinValue = 6
       ParentFont = False
-      TabOrder = 18
+      TabOrder = 17
       Value = 12
       OnChange = SpinEdit1Change
     end
@@ -1815,7 +1799,7 @@ object Form1: TForm1
       Font.Style = []
       ParentBackground = False
       ParentFont = False
-      TabOrder = 19
+      TabOrder = 18
       OnMouseDown = clearselbmMouseDown
       OnMouseUp = clearselbmMouseUp
     end
@@ -1833,7 +1817,7 @@ object Form1: TForm1
       Font.Style = []
       ParentBackground = False
       ParentFont = False
-      TabOrder = 20
+      TabOrder = 19
       OnMouseDown = clrallbmMouseDown
       OnMouseUp = clrallbmMouseUp
     end
@@ -2026,7 +2010,7 @@ object Form1: TForm1
         FFFFFFFFFF00}
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 21
+      TabOrder = 20
       StyleElements = []
       OnClick = helpbuttonClick
     end
@@ -2042,7 +2026,7 @@ object Form1: TForm1
       Font.Name = 'Lucida Sans Unicode'
       Font.Style = []
       ParentFont = False
-      TabOrder = 22
+      TabOrder = 21
       Text = 'bookmarks'
       OnChange = bookmarklistChange
     end
@@ -2058,7 +2042,7 @@ object Form1: TForm1
       Font.Name = 'Lucida Sans Unicode'
       Font.Style = [fsBold]
       ParentFont = False
-      TabOrder = 23
+      TabOrder = 22
     end
     object GreekHidden: TCheckBox
       Left = 840
@@ -2072,7 +2056,7 @@ object Form1: TForm1
       Font.Name = 'Lucida Sans Unicode'
       Font.Style = [fsBold]
       ParentFont = False
-      TabOrder = 24
+      TabOrder = 23
       OnClick = GreekHiddenClick
     end
     object choosefile: TComboBox
@@ -2087,7 +2071,7 @@ object Form1: TForm1
       Font.Name = 'Lucida Sans Unicode'
       Font.Style = []
       ParentFont = False
-      TabOrder = 25
+      TabOrder = 24
       Text = 'choosefile'
       OnClick = choosefileClick
       OnMouseEnter = choosefileMouseEnter
@@ -2102,7 +2086,7 @@ object Form1: TForm1
       ParentShowHint = False
       Smooth = True
       ShowHint = False
-      TabOrder = 26
+      TabOrder = 25
     end
     object linesearch: TRadioButton
       Left = 371
@@ -2116,7 +2100,7 @@ object Form1: TForm1
       Font.Name = 'Lucida Sans Unicode'
       Font.Style = [fsBold]
       ParentFont = False
-      TabOrder = 27
+      TabOrder = 26
       OnClick = RadioGroup1Click
     end
     object capsearch: TRadioButton
@@ -2132,7 +2116,7 @@ object Form1: TForm1
       Font.Name = 'Lucida Sans Unicode'
       Font.Style = [fsBold]
       ParentFont = False
-      TabOrder = 29
+      TabOrder = 28
       OnClick = RadioGroup1Click
     end
     object bkmarksearch: TRadioButton
@@ -2151,7 +2135,7 @@ object Form1: TForm1
       Font.Name = 'Lucida Sans Unicode'
       Font.Style = [fsBold]
       ParentFont = False
-      TabOrder = 28
+      TabOrder = 27
       TabStop = True
       OnClick = RadioGroup1Click
     end
@@ -2167,27 +2151,9 @@ object Form1: TForm1
       Font.Name = 'Lucida Sans Unicode'
       Font.Style = []
       ParentFont = False
-      TabOrder = 30
+      TabOrder = 29
       OnExit = textboxExit
       OnKeyPress = textboxKeyPress
-    end
-    object ListButton: TButton
-      Left = 943
-      Top = 5
-      Width = 50
-      Height = 39
-      Caption = 'List'
-      TabOrder = 31
-      OnClick = ListButtonClick
-    end
-    object greekbutton: TButton
-      Left = 943
-      Top = 60
-      Width = 64
-      Height = 25
-      Caption = 'greek'
-      TabOrder = 32
-      OnClick = greekbuttonClick
     end
     object DragDropOK: TCheckBox
       Left = 928
@@ -2195,7 +2161,7 @@ object Form1: TForm1
       Width = 97
       Height = 17
       Caption = 'DragDrop OK'
-      TabOrder = 33
+      TabOrder = 30
     end
   end
   object Iltree: TVirtualStringTree

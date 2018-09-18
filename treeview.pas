@@ -5,7 +5,7 @@ interface
 uses
     Windows, Messages, ActiveX, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, ImgList, ComCtrls, xmldom, XMLIntf, msxmldom, XMLDoc, StdCtrls,
-    ExtCtrls, Grids, Spin, Buttons, VirtualTrees, Textform,
+    ExtCtrls, Grids, Spin, Buttons, VirtualTrees, outputs,
     colorpickform, davColorBox, editor, Math, System.UITypes,
     StrUtils, OleCtnrs, OleCtrls, SHDocVw, Menus, jpeg, helpscreen,
     GIFImg, ChooseDir, System.ImageList, butlerview, gs_dialog;
@@ -19,7 +19,7 @@ type
         Expandbtn: TBitBtn;
         ShowTextBtn: TBitBtn;
         loadxmlbtn: TBitBtn;
-        savexmlbtn: TBitBtn;
+    savebtn: TBitBtn;
         autosave: TCheckBox;
         ColorPickbtn: TBitBtn;
         collapsebtn: TBitBtn;
@@ -34,7 +34,6 @@ type
         RadioGroup1: TRadioGroup;
         greeksearchbtn: TBitBtn;
         bookmarkbtn: TBitBtn;
-        Button1: TButton;
         Iltree: TVirtualStringTree;
         SpinEdit1: TSpinEdit;
         Label2: TLabel;
@@ -58,9 +57,7 @@ type
         remarks: TRichEdit;
         textbox: TEdit;
         searchtextlbl: TLabel;
-        ListButton: TButton;
         OpenDialog1: TOpenDialog;
-        greekbutton: TButton;
         DragDropOK: TCheckBox;
 
         procedure FormCreate(Sender: TObject);
@@ -82,7 +79,7 @@ type
           var Allowed: Boolean);
         procedure IltreeDragOver(Sender: TBaseVirtualTree; Source: TObject; Shift: TShiftState; State: TDragState;
           Pt: TPoint; Mode: TDropMode; var Effect: Integer; var Accept: Boolean);
-        procedure savexmlbtnClick(Sender: TObject);
+        procedure savebtnClick(Sender: TObject);
         procedure SpinEdit1Change(Sender: TObject);
         procedure ColorPickbtnClick(Sender: TObject);
         procedure SetNodeBGColor(kleur: TColor);
@@ -140,19 +137,16 @@ type
         procedure ListButtonClick(Sender: TObject);
         procedure ScrollToTextline(Node: PVirtualNode);
         procedure FormDestroy(Sender: TObject);
-        procedure greekbuttonClick(Sender: TObject);
         procedure IltreeFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
         procedure IltreeGetImageIndexEx(Sender: TBaseVirtualTree; Node: PVirtualNode; Kind: TVTImageKind;
           Column: TColumnIndex; var Ghosted: Boolean; var ImageIndex: TImageIndex; var ImageList: TCustomImageList);
-        function EscString(s: String): String;
-        function ColorString(kleur: TColor): String;
         procedure RenameBackups(filename: String);
         procedure XML2Tree(Iltree: TVirtualStringTree; XMLDoc: TXMLDocument);
-        procedure Tree2XMLList(Iltree: TVirtualStringTree);
-        procedure Tree2XML(Iltree: TVirtualStringTree);
-        procedure Tree2HTML; // create html collapsible list
-        procedure greek2html;
-        procedure greek2dat;
+//        procedure Tree2XMLList(Iltree: TVirtualStringTree);
+//        procedure Tree2XML(Iltree: TVirtualStringTree);
+//        procedure Tree2HTML; // create html collapsible list
+//        procedure greek2html;
+//        procedure greek2dat;
         procedure ColorTextlines(SetTreeColor: Boolean = True);
     procedure StatusBar1MouseEnter(Sender: TObject);
     procedure choosefileMouseEnter(Sender: TObject);
@@ -224,34 +218,6 @@ const
 implementation
 
 {$R *.dfm}
-
-// ******************EscString***********************
-function TForm1.EscString(s: String): String;
-var
-    i: Integer;
-    new: String;
-begin
-    for i := 0 to Length(s) - 1 do
-    begin
-        if s[i] = '&' then
-        begin
-            new := MidStr(s, 0, i - 1) + '&amp; ' + MidStr(s, i + 1, Length(s) - i);
-            s := new;
-        end;
-
-    end;
-    Result := s;
-end;
-
-function TForm1.ColorString(kleur: TColor): String;
-var
-    bstr: string;
-    bg: Longint;
-begin
-    bg := ColorToRGB(kleur);
-    bstr := IntToHex(bg, 6);
-    Result := String(bstr);
-end;
 
 // *******************RenameBackups*****************
 procedure TForm1.RenameBackups(filename: String);
@@ -413,462 +379,6 @@ begin (* XML2TREE *)
 
     ButlerForm.GreekView.Items.EndUpdate;
     Maxlines := Linecount;
-    Form1.ProgressBar1.Position := 0;
-end;
-
-// *************** TREE2XMLList for use by site index.html ************************
-procedure TForm1.Tree2XMLList(Iltree: TVirtualStringTree);
-var
-    tn: PVirtualNode;
-    XMLDoc: TXMLDocument;
-    iNode: IXMLNode;
-    td: ^rTreeData;
-    text, name, colstr: String;
-    kleur: TColor;
-    totalsize: Integer; // if ok, number of lines in the Iliad
-    function ProcessTreeItem(treechildnode: PVirtualNode; XMLparentNode: IXMLNode): Integer;
-    var // node has Greek text IFF it's a leaf
-        XMLchildNode: IXMLNode;
-        text: String;
-        tdata, ttemp: ^rTreeData;
-        nodetemp: PVirtualNode;
-        i: Integer;
-        linenumber, chap, line: string;
-        lvl: Integer;
-        size: Integer; // number of textlines the node refers to
-    begin
-        if (treechildnode = nil) then
-        begin
-            Result := 0;
-            Exit;
-        end;
-
-        tdata := Iltree.GetNodeData(treechildnode);
-        lvl := Iltree.GetNodeLevel(treechildnode);
-
-        if tdata.XMLName = 'line' then
-        begin
-            name := 'line'; // leaf. keep this name!
-            XMLchildNode := XMLparentNode.AddChild(name);  //--
-            Form1.ProgressBar1.Position := tdata.index;
-        end else begin
-            name := 'lvl' + String(IntToStr(lvl));
-            XMLchildNode := XMLparentNode.AddChild(name);
-
-            nodetemp := treechildnode;
-            ttemp := Form1.Iltree.GetNodeData(nodetemp);
-            while ttemp.line = '' do
-            begin // go get chapter+linenr (line empty except leaves)
-                nodetemp := nodetemp.FirstChild; // line contains chapter+linenr (A 1 etc)
-                ttemp := Form1.Iltree.GetNodeData(nodetemp);
-            end;
-            chap := Copy(ttemp.line, 1, 1);
-            line := Copy(ttemp.line, 2);
-            i := Pos(chap, GRalfabet); // letter to index
-            linenumber := String(IntToStr(i)) + '.' + line;
-            XMLchildNode.Attributes['ln'] := linenumber;
-        end;
-        size := 0;
-        if treechildnode.ChildCount > 0 then // if not a leaf, then...
-        begin
-            text := tdata.Data;
-            if text <> '' then
-            begin
-                XMLchildNode.Attributes['d'] := text;
-            end else begin
-                if (lvl >= 1) and (name <> 'line') then
-                    XMLchildNode.Attributes['d'] := 'descr';
-            end;
-            kleur := tdata.BGColor;
-            colstr := ColorString(kleur);
-            colstr := colstr.Substring(4, 2) + colstr.Substring(2, 2) + colstr.Substring(0, 2);
-            if (kleur <> Form1.DefaultBG) then
-            begin
-                XMLchildNode.Attributes['c'] := colstr;
-            end;
-            kleur := tdata.FGColor;
-            colstr := ColorString(kleur);
-            colstr := colstr.Substring(4, 2) + colstr.Substring(2, 2) + colstr.Substring(0, 2);
-            if (kleur <> Form1.DefaultFG) then
-            begin
-                XMLchildNode.Attributes['f'] := colstr;
-            end;
-
-            // if tdata.remark <> '' then XMLchildNode.Attributes[ 'rem' ] := tdata.remark;
-        end else begin // leaf
-            size := 1;
-            XMLchildNode.Text := tdata.Data; //--
-        end;
-        // child nodes, depth first
-        treechildnode := treechildnode.FirstChild;
-        while treechildnode <> nil do
-        begin
-            size := size + ProcessTreeItem(treechildnode, XMLchildNode);
-            treechildnode := treechildnode.NextSibling;
-        end;
-        if size > 1 then
-            XMLchildNode.Attributes['sz'] := IntToStr(size);
-        Result := size;
-    end; (* local ProcessTreeItem *)
-
-// *************************************************
-begin (* Tree2XMLList (same as tree2xml but without greek text & some changes) *)
-    Form1.ProgressBar1.Position := 0;
-
-    XMLDoc := TXMLDocument.Create(nil);
-    XMLDoc.Active := True;
-    tn := Iltree.GetFirst;
-    td := Iltree.GetNodeData(tn);
-    text := td.XMLName;
-    iNode := XMLDoc.AddChild(text);
-    iNode.Attributes['d'] := 'The Iliad';
-    totalsize := 0;
-    tn := tn.FirstChild;
-    while tn <> nil do
-    begin
-        totalsize := totalsize + ProcessTreeItem(tn, iNode);
-
-        tn := tn.NextSibling;
-    end;
-    iNode.Attributes['sz'] := IntToStr(totalsize);
-    XMLfilename := 'list.xml';
-    if not XMLDoc.IsEmptyDoc then
-    begin
-        XMLDoc.SaveToFile(XMLfilename);
-    end;
-    Form1.ProgressBar1.Position := 0;
-end; (* Tree2XMLList *)
-
-// *************************************************
-// *************************************************
-
-procedure TForm1.Tree2XML(Iltree: TVirtualStringTree);
-var
-    tn: PVirtualNode;
-    XMLDoc: TXMLDocument;
-    iNode: IXMLNode;
-    td: ^rTreeData;
-    text, name: String;
-    kleur: TColor;
-    totalsize: Integer; // if ok, number of lines in the Iliad
-    function ProcessTreeItem(treechildnode: PVirtualNode; XMLparentNode: IXMLNode): Integer;
-    var // node has Greek text IFF it's a leaf
-        XMLchildNode: IXMLNode;
-        text: String;
-        tdata: ^rTreeData;
-        lvl: Integer;
-        size: Integer; // number of textlines the node refers to
-    begin
-        if (treechildnode = nil) then
-        begin
-            Result := 0;
-            Exit;
-        end;
-        tdata := Iltree.GetNodeData(treechildnode);
-        lvl := Iltree.GetNodeLevel(treechildnode);
-
-        if tdata.XMLName = 'line' then
-        begin
-            name := 'line'; // leaf. keep this name!
-            Form1.ProgressBar1.Position := tdata.index;
-        end
-        else
-            name := 'lvl' + String(IntToStr(lvl));
-
-        size := 0;
-        XMLchildNode := XMLparentNode.AddChild(name);
-        if treechildnode.ChildCount > 0 then // if not a leaf, then...
-        begin
-            text := tdata.Data;
-            if text <> '' then
-            begin
-                XMLchildNode.Attributes['d'] := text;
-            end else begin
-                if (lvl >= 1) and (name <> 'line') then
-                    XMLchildNode.Attributes['d'] := 'descr';
-            end;
-            kleur := tdata.BGColor;
-            if (kleur <> Form1.DefaultBG) then
-                XMLchildNode.Attributes['c'] := ColorString(kleur);
-            kleur := tdata.FGColor;
-            if (kleur <> Form1.DefaultFG) then
-                XMLchildNode.Attributes['f'] := ColorString(kleur);
-
-            if tdata.remark <> '' then
-                XMLchildNode.Attributes['rem'] := tdata.remark;
-            if tdata.italic then
-                XMLchildNode.Attributes['ital'] := '1';
-
-        end else begin // leaf
-            XMLchildNode.NodeValue := tdata.Data;
-            XMLchildNode.Attributes['ltr'] := Copy(tdata.line, 1, 1);
-            XMLchildNode.Attributes['nr'] := Copy(tdata.line, 2);
-            size := 1;
-        end;
-        if tdata.bookmark <> '' then
-        begin
-            XMLchildNode.Attributes['bm'] := tdata.bookmark;
-        end;
-
-        // child nodes, depth first
-        treechildnode := treechildnode.FirstChild;
-        while treechildnode <> nil do
-        begin
-            size := size + ProcessTreeItem(treechildnode, XMLchildNode);
-            treechildnode := treechildnode.NextSibling;
-        end;
-        if size > 1 then
-            XMLchildNode.Attributes['sz'] := IntToStr(size);
-        Result := size;
-    end; // local ProcessTreeItem
-// *************************************************
-begin // Tree2XML
-    Form1.ProgressBar1.Position := 0;
-
-    XMLDoc := TXMLDocument.Create(nil);
-    XMLDoc.Active := True;
-    tn := Iltree.GetFirst;
-    td := Iltree.GetNodeData(tn);
-    text := td.XMLName;
-    iNode := XMLDoc.AddChild(text);
-    iNode.Attributes['d'] := 'The Iliad';
-    totalsize := 0;
-    tn := tn.FirstChild;
-    while tn <> nil do
-    begin
-        totalsize := totalsize + ProcessTreeItem(tn, iNode);
-
-        tn := tn.NextSibling;
-    end;
-    iNode.Attributes['sz'] := IntToStr(totalsize);
-    XMLfilename := Form1.choosefile.Items[Form1.choosefile.ItemIndex];
-    if not XMLDoc.IsEmptyDoc then
-    begin
-        RenameBackups(XMLfilename);
-        XMLDoc.SaveToFile(XMLfilename);
-    end;
-    Form1.ProgressBar1.Position := 0;
-end; // Tree2XML
-
-// *************** TREE2HTML ************************
-procedure TForm1.Tree2HTML; // create html collapsible list
-var
-    TekstBuf: TStringList;
-    txt: String;
-    chap, line, linenumber: String;
-    i: Integer;
-    s, bstr, fstr: String;
-
-    procedure walk(Node: PVirtualNode);
-    var
-        td, ttemp: ^rTreeData;
-        nodetemp: PVirtualNode;
-        lvl: Integer;
-        empty: Boolean;
-    begin
-        if Node <> nil then
-        begin
-            lvl := Form1.Iltree.GetNodeLevel(Node);
-            txt := '<ol';
-            if lvl <= 8 then
-            begin // level class id's voor html DOM manipulatie
-                case lvl of
-                    0:
-                        txt := txt + ' class="v0">';
-                    1:
-                        txt := txt + ' class="v1">';
-                    2:
-                        txt := txt + ' class="v2">';
-                    3:
-                        txt := txt + ' class="v3">';
-                    4:
-                        txt := txt + ' class="v4">';
-                    5:
-                        txt := txt + ' class="v5">';
-                    6:
-                        txt := txt + ' class="v6">';
-                    7:
-                        txt := txt + ' class="v7">';
-                    8:
-                        txt := txt + ' class="v8">';
-                end;
-            end else begin
-                txt := txt + '>';
-            end;
-            TekstBuf.Add(txt);
-
-            empty := True;
-            repeat
-                td := Form1.Iltree.GetNodeData(Node);
-                ttemp := td;
-                nodetemp := Node;
-                txt := '';
-                while ttemp.line = '' do
-                begin // go get chapter+linenr (line empty except leaves)
-                    nodetemp := nodetemp.FirstChild; // line contains chapter+linenr (A 1 etc)
-                    ttemp := Form1.Iltree.GetNodeData(nodetemp);
-                end;
-                chap := Copy(ttemp.line, 1, 1);
-                line := Copy(ttemp.line, 2);
-                i := Pos(chap, GRalfabet); // letter to index
-                linenumber := '[' + String(IntToStr(i)) + '.' + line + ']';
-                // len := 8 - Length( linenumber );
-                // for n := 1 to len do begin
-                // linenumber := linenumber + '&nbsp;'; // align levels on page
-                // end;
-                txt := '<span class="ln">' + linenumber + '</span>';
-                if td.line = '' then // exclude the greek text, too cumbersome otherwise
-                begin
-                    empty := false;
-                    TekstBuf.Add('<li>');
-                    TekstBuf.Add(txt);
-                    bstr := ColorString(td.BGColor);
-                    bstr := bstr.Substring(4, 2) + bstr.Substring(2, 2) + bstr.Substring(0, 2);
-                    fstr := ColorString(td.FGColor);
-                    fstr := fstr.Substring(4, 2) + fstr.Substring(2, 2) + fstr.Substring(0, 2);
-                    s := '<span style="color: #' + fstr + '; background-color: #' + bstr + '">';
-                    TekstBuf.Add(String(s));
-                    if lvl = 0 then
-                        txt := ' The Iliad '
-                    else
-                        txt := '&nbsp;' + EscString(td.Data) + '&nbsp;';
-                    TekstBuf.Add(txt);
-                    TekstBuf.Add('</span>');
-                    if Node.ChildCount <> 0 then
-                    begin
-                        ttemp := Form1.Iltree.GetNodeData(Node.FirstChild);
-                        if ttemp.line = '' then
-                            TekstBuf.Add('<span>&nbsp;<b>+</b></span>');
-                        walk(Node.FirstChild);
-                    end;
-                    TekstBuf.Add('</li>');
-                end
-                else
-                    Form1.ProgressBar1.Position := td.index;
-                Node := Node.NextSibling;
-            until Node = nil;
-            if not empty then
-                TekstBuf.Add('</ol>')
-            else
-                TekstBuf.Delete(TekstBuf.Count - 1);
-        end;
-    end;
-
-begin
-    TekstBuf := TStringList.Create;
-    // TekstBuf.Add( '<h1>Semantic Structure</h1>' );
-    Form1.ProgressBar1.Position := 0;
-
-    walk(Form1.Iltree.GetFirst); // create the <OL> part of the html file
-
-    TekstBuf.SaveToFile('list.html');
-    TekstBuf.Destroy;
-    Form1.ProgressBar1.Position := 0;
-end;
-
-// ****************** GREEK HTML ********************
-procedure TForm1.greek2html;
-var
-    TekstBuf: TStringList;
-    c, currchap: string;
-
-    procedure walk(Node: PVirtualNode);
-    var
-        tdata: ^rTreeData;
-        txt, lineID: string;
-    begin
-        if Node = nil then
-            Exit;
-        txt := '';
-        lineID := '';
-        repeat
-            if Node.ChildCount > 0 then
-                walk(Node.FirstChild)
-            else
-            begin
-                tdata := Node.GetData;
-                if lineID = '' then
-                begin
-                    lineID := tdata.line;
-                    c := lineID.Substring(0, 1);
-                    if currchap <> c then
-                    begin
-                        currchap := c;
-                        TekstBuf.Add('<h4>Book ' + IntToStr(GRalfabet.IndexOf(c) + 1) + '</h4>');
-                    end;
-                end;
-                txt := txt + tdata.Data + '<br>' + sLineBreak;
-            end;
-            Node := Node.NextSibling;
-        until Node = nil;
-        if lineID <> '' then
-            TekstBuf.Add('<p><a>' + lineID + '</a>' + txt + '</p>');
-    end;
-
-begin
-    TekstBuf := TStringList.Create;
-    // TekstBuf.Add( '<h1>Semantic Structure</h1>' );
-    Form1.ProgressBar1.Position := 0;
-    currchap := #0;
-
-    walk(Form1.Iltree.GetFirst); // create the <OL> part of the html file
-
-    TekstBuf.SaveToFile('greeklist.html', TEncoding.UTF8);
-    TekstBuf.Destroy;
-    Form1.ProgressBar1.Position := 0;
-end;
-
-
-// ****************** GREEK_IL.DAT ********************
-procedure TForm1.greek2dat;
-var
-    TekstBuf: TStringList;
-    c, currchap: string;
-
-    procedure walk(Node: PVirtualNode);
-    var
-        tdata: ^rTreeData;
-        txt, lineID: string;
-    begin
-        if Node = nil then
-            Exit;
-        txt := '';
-        lineID := '';
-        repeat
-            if Node.ChildCount > 0 then
-                walk(Node.FirstChild)
-            else
-            begin
-                tdata := Node.GetData;
-                if lineID = '' then
-                begin
-                    lineID := tdata.line;
-                    c := lineID.Substring(0, 1);
-                    if currchap <> c then
-                    begin
-                        currchap := c;
-                        TekstBuf.Add('Book ' + IntToStr(GRalfabet.IndexOf(c) + 1));
-                    end;
-                end;
-                txt := txt + tdata.Data + sLineBreak;
-            end;
-            Node := Node.NextSibling;
-        until Node = nil;
-        if lineID <> '' then
-            TekstBuf.Add(lineID + ' ' + txt);
-    end;
-
-begin
-    TekstBuf := TStringList.Create;
-    TekstBuf.LineBreak := #1;
-    // TekstBuf.Add( '<h1>Semantic Structure</h1>' );
-    Form1.ProgressBar1.Position := 0;
-    currchap := #0;
-
-    walk(Form1.Iltree.GetFirst);
-
-    TekstBuf.SaveToFile('greeklist.txt', TEncoding.UTF8);
-    TekstBuf.Destroy;
     Form1.ProgressBar1.Position := 0;
 end;
 
@@ -1857,11 +1367,11 @@ end;
 
 procedure TForm1.ListButtonClick(Sender: TObject);
 begin
-    StatusBar1.Panels[1].text := 'Saving XML';
-    Iltree.Cursor := crHourGlass;
-    Tree2XMLList(Iltree);
-    Iltree.Cursor := crDefault;
-    is_changed.Checked := false;
+//    StatusBar1.Panels[1].text := 'Saving XML';
+//    Iltree.Cursor := crHourGlass;
+//    Tree2XMLList(Iltree);
+//    Iltree.Cursor := crDefault;
+//    is_changed.Checked := false;
 end;
 
 procedure TForm1.LoadRemarks;
@@ -1955,16 +1465,6 @@ begin
         ProgressBar1.Position := Linecount;
         Inc(Linecount);
     end;
-
-end;
-
-procedure TForm1.greekbuttonClick(Sender: TObject);
-var
-    result: TModalResult;
-begin
-    result := GreekSaveDialog.ShowModal;
-    if result = mrNo then greek2html
-    else if result = mrYes then greek2dat;
 
 end;
 
@@ -2321,13 +1821,14 @@ begin
     Iltree.SetFocus;
 end;
 
-procedure TForm1.savexmlbtnClick(Sender: TObject);
+procedure TForm1.savebtnClick(Sender: TObject);
 begin
-    StatusBar1.Panels[1].text := 'Saving XML';
-    Iltree.Cursor := crHourGlass;
-    Tree2XML(Iltree);
-    Iltree.Cursor := crDefault;
-    is_changed.Checked := false;
+    OutputForm.Show;
+//    StatusBar1.Panels[1].text := 'Saving XML';
+//    Iltree.Cursor := crHourGlass;
+//    Tree2XML(Iltree);
+//    Iltree.Cursor := crDefault;
+//    is_changed.Checked := false;
 end;
 
 procedure TForm1.autoloadClick(Sender: TObject);
@@ -2431,7 +1932,7 @@ end;
 procedure TForm1.HTMLButtonClick(Sender: TObject);
 begin
     StatusBar1.Panels[1].text := 'Create HTML-file from XML tree';
-    Tree2HTML;
+//    Tree2HTML;
 end;
 
 procedure TForm1.choosefileClick(Sender: TObject);
@@ -2562,7 +2063,7 @@ begin
             mrYes:
                 begin
                     StatusBar1.Panels[1].text := 'saving XML & closing';
-                    Tree2XML(Iltree);
+                    //Tree2XML(Iltree);
                 end;
             mrNo:
                 begin
@@ -2580,7 +2081,7 @@ begin
     else
     begin
         StatusBar1.Panels[1].text := 'saving XML & closing';
-        Tree2XML(Iltree);
+        //Tree2XML(Iltree);
     end;
 end;
 
