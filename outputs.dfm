@@ -49,16 +49,13 @@ object OutputForm: TOutputForm
       item
         Width = 50
       end>
-    ExplicitLeft = 112
-    ExplicitTop = 352
-    ExplicitWidth = 0
   end
   object ListButton: TButton
     Left = 43
     Top = 97
     Width = 270
     Height = 24
-    Caption = 'Save XML for my site (no greek in it)'
+    Caption = 'json create'
     TabOrder = 3
     OnClick = ListButtonClick
   end
@@ -94,5 +91,15 @@ object OutputForm: TOutputForm
     Height = 25
     Caption = 'save standard XML'
     TabOrder = 7
+  end
+  object Memo1: TMemo
+    Left = 48
+    Top = 224
+    Width = 521
+    Height = 169
+    Lines.Strings = (
+      'Memo1')
+    ScrollBars = ssBoth
+    TabOrder = 8
   end
 end
