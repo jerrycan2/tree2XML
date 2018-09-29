@@ -5,7 +5,8 @@ interface
 uses
     Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, System.UITypes, Vcl.Graphics,
     Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VirtualTrees, xmldom, XMLIntf, msxmldom, XMLDoc, StrUtils, Vcl.StdCtrls,
-    Vcl.ComCtrls, System.JSON.Types, System.JSON.Writers;
+    Vcl.ComCtrls, System.JSON.Types, System.JSON.Writers, System.JSON.Builders, System.JSON.Readers;
+
 
 type
     TLinenumber = record
@@ -36,7 +37,7 @@ type
         SaveHtmlButton: TButton;
         StatusBar1: TStatusBar;
         ListButton: TButton;
-        greekhtmlbutton: TButton;
+    tempbutton: TButton;
         greekdatbutton: TButton;
         Button1: TButton;
         Button2: TButton;
@@ -45,9 +46,11 @@ type
         procedure FormResize(Sender: TObject);
         procedure ListButtonClick(Sender: TObject);
         procedure Button1Click(Sender: TObject);
+    procedure tempbuttonClick(Sender: TObject);
     private
         { Private declarations }
     public
+        procedure ParseJSON;
         procedure Tree2JSON(tree: TVirtualStringTree);
         procedure Tree2XMLList(tree: TVirtualStringTree);
         procedure Tree2XML(tree: TVirtualStringTree);
@@ -134,8 +137,7 @@ var
         end;
 
     end;
-
-    //------------------------------------------------------//
+     //------------------------------------------------------//
 begin
     globalcounter := 0;
     StringWriter := TStringWriter.Create();
@@ -155,6 +157,22 @@ begin
     StringWriter.Destroy;
     Writer.Destroy;
 end;
+
+//procedure TOutputForm.ParseJSON;
+//var
+//  LIterator: TJSONIterator;
+//  LJsonTextReader: TJsonTextReader;
+//  FileStream: TFileStream;
+//  LReader: TReader;
+//begin
+//  { Create the TFileStream object and the TReader used to read data from files. }
+//  FileStream := TFileStream.Create
+//    ('json.test', fmOpenRead);
+//  { $FF = 255. Used in creating the TReader object as the second parameter : Buffer size. }
+//  LReader := TReader.Create(FileStream, $FF);
+//  LJsonTextReader := TJsonTextReader.Create(LReader);
+//
+//end;
 
 {$ENDREGION}
 
@@ -186,6 +204,18 @@ begin
     StatusBar1.Panels[1].text := 'Create HTML-file from XML tree';
     Tree2HTML(Form1.Iltree);
 end;
+
+procedure TOutputForm.tempbuttonClick(Sender: TObject);
+var
+    list: TStringList;
+    n: integer;
+begin
+    list := TStringList.Create;
+    list.LoadFromFile('greek_il.json');
+
+    list.Destroy;
+end;
+
 {$ENDREGION}
 {$REGION 'OLD PROCS'}
 //Result := GreekSaveDialog.ShowModal;

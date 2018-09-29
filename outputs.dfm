@@ -28,6 +28,7 @@ object OutputForm: TOutputForm
     Height = 25
     Hint = 'save tree + attributes as HTML'
     Caption = 'save HTML'
+    Enabled = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clTeal
     Font.Height = -13
@@ -55,17 +56,18 @@ object OutputForm: TOutputForm
     Top = 97
     Width = 270
     Height = 24
-    Caption = 'json create'
+    Caption = 'json create from tree'
     TabOrder = 3
     OnClick = ListButtonClick
   end
-  object greekhtmlbutton: TButton
+  object tempbutton: TButton
     Left = 43
     Top = 127
     Width = 270
     Height = 25
-    Caption = 'save greek html'
+    Caption = 'convert'
     TabOrder = 4
+    OnClick = tempbuttonClick
   end
   object greekdatbutton: TButton
     Left = 43
@@ -73,6 +75,7 @@ object OutputForm: TOutputForm
     Width = 270
     Height = 25
     Caption = 'save greek .dat'
+    Enabled = False
     TabOrder = 5
   end
   object Button1: TButton
@@ -81,6 +84,7 @@ object OutputForm: TOutputForm
     Width = 270
     Height = 25
     Caption = 'save butler xml'
+    Enabled = False
     TabOrder = 6
     OnClick = Button1Click
   end
@@ -90,6 +94,7 @@ object OutputForm: TOutputForm
     Width = 270
     Height = 25
     Caption = 'save standard XML'
+    Enabled = False
     TabOrder = 7
   end
   object Memo1: TMemo
