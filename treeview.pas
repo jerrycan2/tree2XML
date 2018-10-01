@@ -448,8 +448,8 @@ var
 
         if tdata.XMLName = 'line' then
         begin
-            name := 'line'; // leaf. keep this name!
-            XMLchildNode := XMLparentNode.AddChild(name);  //--
+            //name := 'line'; // leaf. keep this name!
+            //XMLchildNode := XMLparentNode.AddChild(name);  //--
             Form1.ProgressBar1.Position := tdata.index;
         end else begin
             name := 'lvl' + String(IntToStr(lvl));
@@ -497,7 +497,7 @@ var
             // if tdata.remark <> '' then XMLchildNode.Attributes[ 'rem' ] := tdata.remark;
         end else begin // leaf
             size := 1;
-            XMLchildNode.Text := tdata.Data; //--
+            //XMLchildNode.Text := tdata.Data; //--
         end;
         // child nodes, depth first
         treechildnode := treechildnode.FirstChild;
