@@ -711,7 +711,7 @@ var
                 chap := Copy(ttemp.line, 1, 1);
                 line := Copy(ttemp.line, 2);
                 i := Pos(chap, GRalfabet); // letter to index
-                linenumber := '[' + String(IntToStr(i)) + '.' + line + ']';
+                linenumber := String(IntToStr(i)) + '.' + line;
                 // len := 8 - Length( linenumber );
                 // for n := 1 to len do begin
                 // linenumber := linenumber + '&nbsp;'; // align levels on page
