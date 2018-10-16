@@ -156,6 +156,9 @@ type
         procedure ColorTextlines(SetTreeColor: Boolean = True);
     procedure StatusBar1MouseEnter(Sender: TObject);
     procedure choosefileMouseEnter(Sender: TObject);
+    function getchapter(lineID: string): integer;
+    function getlinenr(lineID: string): integer;
+
 
     private
         EditingBookmark: Boolean;
@@ -184,9 +187,9 @@ type
 type
     rTreeData = record // VirtualTreeNode's attributes
         XMLName: String; // the XML identifier of the node
-        Data: String; // the text appearing on screen for this node
+        Data: String; // the greek text appearing on screen for this node (if any)
         remark: String; // F3 shows it
-        line: String; // iliad line if this is a leaf
+        linenumber: String; // iliad linenumber if this is a leaf
         bookmark: String; // bookmark chars if appl.
         BGColor: TColor; // foreground color
         FGColor: TColor; // backgr. color
@@ -253,6 +256,23 @@ begin
     Result := String(bstr);
 end;
 
+//********************LINE NUMBERS******************
+function TForm1.getchapter(lineID: string): integer;
+var
+    pos: integer;
+begin
+    pos := lineID.indexOf('.');
+    result := StrToInt(lineID.Substring(0, pos));
+end;
+
+function TForm1.getlinenr(lineID: string): integer;
+var
+    pos: integer;
+begin
+    pos := lineID.indexOf('.') + 1;
+    result := StrToInt(lineID.Substring(pos));
+end;
+
 // *******************RenameBackups*****************
 procedure TForm1.RenameBackups(filename: String);
 var
@@ -301,6 +321,7 @@ var
         tdata: ^rTreeData;
         text, textoud, line, chap: String;
         item: TListItem;
+        chapnr, linenr: integer;
     begin
         if (XNode = nil) or ((XNode.LocalName = 'line') and (XNode.NodeValue = null)) then
             Exit;
@@ -359,11 +380,13 @@ var
                 Lineindex := 1;
                 Chapindex := Chapindex + 1;
             end;
-            chap := GRalfabet[Chapindex];
+            chapnr := getchapter(XNode.Attributes[ 'lnr' ]);
+            linenr := getlinenr(XNode.Attributes[ 'lnr' ]);
+            chap := IntToStr(Chapindex);
             line := IntToStr(Lineindex);
-            text := chap + line; //temp
-            textoud := String(XNode.Attributes[ 'ltr' ]) + String(XNode.Attributes[ 'nr' ]);
-            if (text <> textoud) then
+            text := chap + '.' + line; //temp
+            textoud := String(XNode.Attributes[ 'lnr' ]);
+            if ((Chapindex <> chapnr) or (Lineindex <> linenr)) then
             begin
                 if not error_shown then
                 begin
@@ -376,7 +399,7 @@ var
             item.Caption := textoud;
             ButlerForm.SetListColors(Linecount, Form1.DefaultFG, Form1.DefaultBG);
 
-            tdata.line := textoud;
+            tdata.linenumber := textoud;
             tdata.index := Linecount;
             Lineindex := Lineindex + 1;
             Linecount := Linecount + 1;
@@ -457,16 +480,16 @@ var
 
             nodetemp := treechildnode;
             ttemp := Form1.Iltree.GetNodeData(nodetemp);
-            while ttemp.line = '' do
+            while ttemp.linenumber = '' do
             begin // go get chapter+linenr (line empty except leaves)
                 nodetemp := nodetemp.FirstChild; // line contains chapter+linenr (A 1 etc)
                 ttemp := Form1.Iltree.GetNodeData(nodetemp);
             end;
-            chap := Copy(ttemp.line, 1, 1);
-            line := Copy(ttemp.line, 2);
-            i := Pos(chap, GRalfabet); // letter to index
-            linenumber := String(IntToStr(i)) + '.' + line;
-            XMLchildNode.Attributes['ln'] := linenumber;
+//            chap := Copy(ttemp.line, 1, 1);
+//            line := Copy(ttemp.line, 2);
+//            i := Pos(chap, GRalfabet); // letter to index
+//            linenumber := String(IntToStr(i)) + '.' + line;
+            XMLchildNode.Attributes['ln'] := ttemp.linenumber;
         end;
         size := 0;
         if treechildnode.ChildCount > 0 then // if not a leaf, then...
@@ -601,8 +624,9 @@ var
 
         end else begin // leaf
             XMLchildNode.NodeValue := tdata.Data;
-            XMLchildNode.Attributes['ltr'] := Copy(tdata.line, 1, 1);
-            XMLchildNode.Attributes['nr'] := Copy(tdata.line, 2);
+            XMLchildNode.Attributes['lnr'] := tdata.linenumber;
+//            XMLchildNode.Attributes['ltr'] := Copy(tdata.line, 1, 1);
+//            XMLchildNode.Attributes['nr'] := Copy(tdata.line, 2);
             size := 1;
         end;
         if tdata.bookmark <> '' then
@@ -641,7 +665,7 @@ begin // Tree2XML
         tn := tn.NextSibling;
     end;
     iNode.Attributes['sz'] := IntToStr(totalsize);
-    XMLfilename := Form1.choosefile.Items[Form1.choosefile.ItemIndex];
+    XMLfilename := 'iliad.xml'; //Form1.choosefile.Items[Form1.choosefile.ItemIndex];
     if not XMLDoc.IsEmptyDoc then
     begin
         RenameBackups(XMLfilename);
@@ -703,21 +727,21 @@ var
                 ttemp := td;
                 nodetemp := Node;
                 txt := '';
-                while ttemp.line = '' do
+                while ttemp.linenumber = '' do
                 begin // go get chapter+linenr (line empty except leaves)
                     nodetemp := nodetemp.FirstChild; // line contains chapter+linenr (A 1 etc)
                     ttemp := Form1.Iltree.GetNodeData(nodetemp);
                 end;
-                chap := Copy(ttemp.line, 1, 1);
-                line := Copy(ttemp.line, 2);
-                i := Pos(chap, GRalfabet); // letter to index
-                linenumber := String(IntToStr(i)) + '.' + line;
+//                chap := Copy(ttemp.line, 1, 1);
+//                line := Copy(ttemp.line, 2);
+//                i := Pos(chap, GRalfabet); // letter to index
+                linenumber := ttemp.linenumber;
                 // len := 8 - Length( linenumber );
                 // for n := 1 to len do begin
                 // linenumber := linenumber + '&nbsp;'; // align levels on page
                 // end;
                 txt := '<span class="ln">' + linenumber + '</span>';
-                if td.line = '' then // exclude the greek text, too cumbersome otherwise
+                if td.linenumber = '' then // exclude the greek text, too cumbersome otherwise
                 begin
                     empty := false;
                     TekstBuf.Add('<li>');
@@ -737,7 +761,7 @@ var
                     if Node.ChildCount <> 0 then
                     begin
                         ttemp := Form1.Iltree.GetNodeData(Node.FirstChild);
-                        if ttemp.line = '' then
+                        if ttemp.linenumber = '' then
                             TekstBuf.Add('<span>&nbsp;<b>+</b></span>');
                         walk(Node.FirstChild);
                     end;
@@ -770,7 +794,7 @@ end;
 procedure TForm1.greek2html;
 var
     TekstBuf: TStringList;
-    c, currchap: string;
+    c, currchap: integer;
 
     procedure walk(Node: PVirtualNode);
     var
@@ -789,12 +813,12 @@ var
                 tdata := Node.GetData;
                 if lineID = '' then
                 begin
-                    lineID := tdata.line;
-                    c := lineID.Substring(0, 1);
+                    lineID := tdata.linenumber;
+                    c := getchapter(lineID);
                     if currchap <> c then
                     begin
                         currchap := c;
-                        TekstBuf.Add('<h4>Book ' + IntToStr(GRalfabet.IndexOf(c) + 1) + '</h4>');
+                        TekstBuf.Add('<h4>Book ' + IntToStr(c) + '</h4>');
                     end;
                 end;
                 txt := txt + tdata.Data + '<br>' + sLineBreak;
@@ -809,7 +833,7 @@ begin
     TekstBuf := TStringList.Create;
     // TekstBuf.Add( '<h1>Semantic Structure</h1>' );
     Form1.ProgressBar1.Position := 0;
-    currchap := #0;
+    currchap := 0;
 
     walk(Form1.Iltree.GetFirst); // create the <OL> part of the html file
 
@@ -823,7 +847,7 @@ end;
 procedure TForm1.greek2dat;
 var
     TekstBuf: TStringList;
-    c, currchap: string;
+    c, currchap: integer;
 
     procedure walk(Node: PVirtualNode);
     var
@@ -842,12 +866,12 @@ var
                 tdata := Node.GetData;
                 if lineID = '' then
                 begin
-                    lineID := tdata.line;
-                    c := lineID.Substring(0, 1);
+                    lineID := tdata.linenumber;
+                    c := getchapter(lineID);
                     if currchap <> c then
                     begin
                         currchap := c;
-                        TekstBuf.Add('Book ' + IntToStr(GRalfabet.IndexOf(c) + 1));
+                        TekstBuf.Add('Book ' + IntToStr(c));
                     end;
                 end;
                 txt := txt + tdata.Data + sLineBreak;
@@ -863,7 +887,7 @@ begin
     TekstBuf.LineBreak := #1;
     // TekstBuf.Add( '<h1>Semantic Structure</h1>' );
     Form1.ProgressBar1.Position := 0;
-    currchap := #0;
+    currchap := 0;
 
     walk(Form1.Iltree.GetFirst);
 
@@ -1259,20 +1283,12 @@ begin
     begin
         n2 := n2.FirstChild;
     end;
-    if n2 = nil then
-    begin
-        n2 := nil;
-    end;
 
     td2 := Iltree.GetNodeData(n2);
     Lineindex := td2.index;
     bg := ButlerForm.GreekView.Items[Lineindex].Caption; // Form2.grid.Cells[ 0, lineindex ];
     if bg = '' then
         Exit;
-
-    i1 := Pos(bg[1], GRalfabet);
-    i2 := StrToInt(MidStr(bg, 2, 3));
-    bg := IntToStr(i1) + '.' + IntToStr(i2);
 
     n2 := Node;
     if (n2.NextSibling = nil) then
@@ -1298,8 +1314,8 @@ begin
         if nd = '' then
             Exit;
 
-        i1 := Pos(nd[1], GRalfabet);
-        i2 := StrToInt(MidStr(nd, 2, 3));
+        i1 := getchapter(nd);
+        i2 := getlinenr(nd);
         if i2 = 1 then
         begin
             Dec(i1);
@@ -1312,7 +1328,7 @@ begin
         nd := IntToStr(i1) + '.' + IntToStr(i2);
     end;
 
-    if tdata.line <> '' then
+    if tdata.linenumber <> '' then
         HintText := String(bg)
     else
         HintText := String(bg) + '-' + String(nd);
@@ -1374,7 +1390,7 @@ begin
             begin
                 if txt = 'line' then
                 begin
-                    CellText := tdata.line + ' ' + tdata.Data;
+                    CellText := tdata.linenumber + ' ' + tdata.Data;
                 end
                 else
                     CellText := descr;
@@ -1483,7 +1499,7 @@ begin
     begin
         for a in SearchText do
             st := st + convertchar(UpperCase(a));
-        target := tdata.line;
+        target := tdata.linenumber;
     end
     else if bkmarksearch.Checked then
     begin
@@ -1945,7 +1961,7 @@ begin
     if tdata.XMLName = 'line' then
     begin
         item := ButlerForm.GreekView.Items.Add;
-        item.Caption := tdata.line;
+        item.Caption := tdata.linenumber;
         item.SubItems.Add(tdata.Data);
         tdata.index := Linecount;
         // parentdata := Sender.GetNodeData(Node.Parent);
@@ -2068,10 +2084,10 @@ begin
         Stream.Write(size, SizeOf(size)); // store length of the string
         Stream.Write(PChar(tdata.XMLName)^, size); // now the string itself
 
-        size := Length(tdata.line) * SizeOf(Char);
+        size := Length(tdata.linenumber) * SizeOf(Char);
         // if size = 0 then size := 2;
         Stream.Write(size, SizeOf(size));
-        Stream.Write(PChar(tdata.line)^, size);
+        Stream.Write(PChar(tdata.linenumber)^, size);
 
         size := Length(tdata.Data) * SizeOf(Char);
         // if size = 0 then size := 2;
@@ -2147,9 +2163,9 @@ begin
     SetLength(txt, size div SizeOf(Char));
     Stream.Read(PChar(txt)^, size);
     if size = 0 then
-        tdata.line := ''
+        tdata.linenumber := ''
     else
-        tdata.line := ArrayToString(txt);
+        tdata.linenumber := ArrayToString(txt);
 
     Stream.Read(size, SizeOf(size));
     SetLength(txt, size div SizeOf(Char));
@@ -2418,7 +2434,7 @@ begin
     if Node.ChildCount > 0 then
     begin
         tdata := Iltree.GetNodeData(Node.FirstChild);
-        if tdata.line <> '' then
+        if tdata.linenumber <> '' then
         begin
             Iltree.Expanded[Node] := false;
         end;

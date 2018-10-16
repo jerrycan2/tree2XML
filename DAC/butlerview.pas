@@ -490,7 +490,7 @@ end;
 
 function TButlerForm.searchLine(ln: TLine): TListItem; // search chap+line, return listitem or nil
 begin
-    result := GreekView.FindCaption(0, ln.GetID(id_alf), false, True, false);
+    result := GreekView.FindCaption(0, ln.GetID(id_num), false, True, false);
 end;
 
 function TButlerForm.searchCard(ln: TLine): integer;
