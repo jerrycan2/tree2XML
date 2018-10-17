@@ -158,7 +158,7 @@ type
     procedure choosefileMouseEnter(Sender: TObject);
     function getchapter(lineID: string): integer;
     function getlinenr(lineID: string): integer;
-
+    function ReverseColor(colstr: string):string;
 
     private
         EditingBookmark: Boolean;
@@ -256,6 +256,11 @@ begin
     Result := String(bstr);
 end;
 
+function TForm1.ReverseColor(colstr: string):string;
+begin  //Delphi has wrong Endian
+    Result := colstr.Substring(4, 2) + colstr.Substring(2, 2) + colstr.Substring(0, 2);
+end;
+
 //********************LINE NUMBERS******************
 function TForm1.getchapter(lineID: string): integer;
 var
@@ -338,13 +343,13 @@ var
             tdata.Data := XNode.Attributes['d'];
         // node screentext
         if XNode.HasAttribute('c') then
-            tdata.BGColor := StrToInt('$' + XNode.Attributes['c']) // bg color
+            tdata.BGColor := StrToInt('$' + ReverseColor(XNode.Attributes['c'])) // bg color
         else
             tdata.BGColor := Form1.DefaultBG; // no color yet
 
         if XNode.HasAttribute('f') then
         begin
-            tdata.FGColor := StrToInt('$' + XNode.Attributes['f']) // foregroundcolor
+            tdata.FGColor := StrToInt('$' + ReverseColor(XNode.Attributes['f'])) // foregroundcolor
         end
         else
             tdata.FGColor := Form1.DefaultFG;
@@ -504,14 +509,14 @@ var
             end;
             kleur := tdata.BGColor;
             colstr := ColorString(kleur);
-            colstr := colstr.Substring(4, 2) + colstr.Substring(2, 2) + colstr.Substring(0, 2);
+            colstr := ReverseColor(colstr);
             if (kleur <> Form1.DefaultBG) then
             begin
                 XMLchildNode.Attributes['c'] := colstr;
             end;
             kleur := tdata.FGColor;
             colstr := ColorString(kleur);
-            colstr := colstr.Substring(4, 2) + colstr.Substring(2, 2) + colstr.Substring(0, 2);
+            colstr := ReverseColor(colstr);
             if (kleur <> Form1.DefaultFG) then
             begin
                 XMLchildNode.Attributes['f'] := colstr;
@@ -612,9 +617,11 @@ var
             end;
             kleur := tdata.BGColor;
             if (kleur <> Form1.DefaultBG) then
+//                XMLchildNode.Attributes['c'] := ReverseColor(ColorString(kleur));
                 XMLchildNode.Attributes['c'] := ColorString(kleur);
             kleur := tdata.FGColor;
             if (kleur <> Form1.DefaultFG) then
+//                XMLchildNode.Attributes['f'] := ReverseColor(ColorString(kleur));
                 XMLchildNode.Attributes['f'] := ColorString(kleur);
 
             if tdata.remark <> '' then
@@ -625,8 +632,6 @@ var
         end else begin // leaf
             XMLchildNode.NodeValue := tdata.Data;
             XMLchildNode.Attributes['lnr'] := tdata.linenumber;
-//            XMLchildNode.Attributes['ltr'] := Copy(tdata.line, 1, 1);
-//            XMLchildNode.Attributes['nr'] := Copy(tdata.line, 2);
             size := 1;
         end;
         if tdata.bookmark <> '' then
@@ -747,9 +752,9 @@ var
                     TekstBuf.Add('<li>');
                     TekstBuf.Add(txt);
                     bstr := ColorString(td.BGColor);
-                    bstr := bstr.Substring(4, 2) + bstr.Substring(2, 2) + bstr.Substring(0, 2);
+                    bstr := ReverseColor(bstr);
                     fstr := ColorString(td.FGColor);
-                    fstr := fstr.Substring(4, 2) + fstr.Substring(2, 2) + fstr.Substring(0, 2);
+                    fstr := ReverseColor(fstr);
                     s := '<span style="color: #' + fstr + '; background-color: #' + bstr + '">';
                     TekstBuf.Add(String(s));
                     if lvl = 0 then
