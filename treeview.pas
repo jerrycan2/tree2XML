@@ -241,6 +241,12 @@ begin
             new := MidStr(s, 0, i - 1) + '&amp; ' + MidStr(s, i + 1, Length(s) - i);
             s := new;
         end;
+//        else if (s[i] = #34) or (s[i] = #39)  then
+//        begin
+//            new := MidStr(s, 0, i - 1) + '&#34; ' + MidStr(s, i + 1, Length(s) - i);
+//            s := new;
+//        end;
+
 
     end;
     Result := s;
