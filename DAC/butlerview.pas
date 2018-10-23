@@ -46,7 +46,7 @@ type
     const
         GRalfabet: String = ('ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ');
         chaplen: array [1 .. 24] of integer = // iliad book lengths
-          (611, 877, 461, 544, 909, 529, 482, 561, 709, 579, 847, 471, 837, 521, 746, 867, 761, 617, 424, 503, 611, 515,
+          (611, 877, 461, 544, 909, 529, 482, 561, 713, 579, 847, 471, 837, 521, 746, 867, 761, 617, 424, 503, 611, 515,
           897, 804);
         property chap: integer read getch write setch;
         property line: integer read getln write setln;

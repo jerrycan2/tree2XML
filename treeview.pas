@@ -221,7 +221,7 @@ const
     Lalfabet: String = ('ABGDEZHQIKLMNCOPRSTUFXYWabgdezhqiklmncoprstufxyw');
     BOM: Char = #$FEFF;
     chaplen: array [1 .. 24] of Integer = // iliad book lengths
-      (611, 877, 461, 544, 909, 529, 482, 561, 709, 579, 847, 471, 837, 521, 746, 867, 761, 617, 424, 503, 611, 515,
+      (611, 877, 461, 544, 909, 529, 482, 561, 713, 579, 847, 471, 837, 521, 746, 867, 761, 617, 424, 503, 611, 515,
       897, 804);
 
 implementation
@@ -407,10 +407,10 @@ var
             end;
 
             // Form2.grid.Cells[ 0, Linecount ] := text;
-            item.Caption := textoud;
+            item.Caption := text; //in case of renumbering after error
             ButlerForm.SetListColors(Linecount, Form1.DefaultFG, Form1.DefaultBG);
 
-            tdata.linenumber := textoud;
+            tdata.linenumber := text;
             tdata.index := Linecount;
             Lineindex := Lineindex + 1;
             Linecount := Linecount + 1;
@@ -623,12 +623,12 @@ var
             end;
             kleur := tdata.BGColor;
             if (kleur <> Form1.DefaultBG) then
-//                XMLchildNode.Attributes['c'] := ReverseColor(ColorString(kleur));
-                XMLchildNode.Attributes['c'] := ColorString(kleur);
+                XMLchildNode.Attributes['c'] := ReverseColor(ColorString(kleur));
+//                XMLchildNode.Attributes['c'] := ColorString(kleur);
             kleur := tdata.FGColor;
             if (kleur <> Form1.DefaultFG) then
-//                XMLchildNode.Attributes['f'] := ReverseColor(ColorString(kleur));
-                XMLchildNode.Attributes['f'] := ColorString(kleur);
+                XMLchildNode.Attributes['f'] := ReverseColor(ColorString(kleur));
+//                XMLchildNode.Attributes['f'] := ColorString(kleur);
 
             if tdata.remark <> '' then
                 XMLchildNode.Attributes['rem'] := tdata.remark;
