@@ -407,10 +407,10 @@ var
             end;
 
             // Form2.grid.Cells[ 0, Linecount ] := text;
-            item.Caption := text; //in case of renumbering after error
+            item.Caption := textoud; //in case of renumbering after error: use text instead
             ButlerForm.SetListColors(Linecount, Form1.DefaultFG, Form1.DefaultBG);
 
-            tdata.linenumber := text;
+            tdata.linenumber := textoud; //in case of renumbering after error: use text instead
             tdata.index := Linecount;
             Lineindex := Lineindex + 1;
             Linecount := Linecount + 1;
