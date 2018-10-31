@@ -832,12 +832,12 @@ var
                         TekstBuf.Add('<h4>Book ' + IntToStr(c) + '</h4>');
                     end;
                 end;
-                txt := txt + tdata.Data + '<br>' + sLineBreak;
+                txt := txt + tdata.Data + '#' + sLineBreak;
             end;
             Node := Node.NextSibling;
         until Node = nil;
         if lineID <> '' then
-            TekstBuf.Add('<p><a>' + lineID + '</a>' + txt + '</p>');
+            TekstBuf.Add('<P><A>' + lineID + '</A>' + txt + '</P>');
     end;
 
 begin
