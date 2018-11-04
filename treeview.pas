@@ -221,7 +221,7 @@ const
     Lalfabet: String = ('ABGDEZHQIKLMNCOPRSTUFXYWabgdezhqiklmncoprstufxyw');
     BOM: Char = #$FEFF;
     chaplen: array [1 .. 24] of Integer = // iliad book lengths
-      (611, 877, 461, 544, 909, 529, 482, 561, 713, 579, 848, 471, 837, 522, 746, 867, 761, 617, 424, 503, 611, 515,
+      (611, 877, 461, 544, 909, 529, 482, 561, 713, 579, 848, 471, 837, 522, 746, 867, 761, 616, 424, 503, 611, 515,
       897, 804);
 
 implementation
