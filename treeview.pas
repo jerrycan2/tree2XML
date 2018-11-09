@@ -217,9 +217,9 @@ var
 
 const
     NofColors = 20;
+    BOM: Char = #$FEFF;
     GRalfabet: String = ('ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω');
     Lalfabet: String = ('ABGDEZHQIKLMNCOPRSTUFXYWabgdezhqiklmncoprstufxyw');
-    BOM: Char = #$FEFF;
     chaplen: array [1 .. 24] of Integer = // iliad book lengths
       (611, 877, 461, 544, 909, 529, 482, 561, 713, 579, 848, 471, 837, 522, 746, 867, 761, 616, 424, 503, 611, 515,
       897, 804);
@@ -705,7 +705,7 @@ var
         begin
             lvl := Form1.Iltree.GetNodeLevel(Node);
             txt := '<ol';
-            if lvl <= 8 then
+            if lvl <= 9 then
             begin // level class id's voor html DOM manipulatie
                 case lvl of
                     0:
@@ -726,6 +726,8 @@ var
                         txt := txt + ' class="v7">';
                     8:
                         txt := txt + ' class="v8">';
+                    9:
+                        txt := txt + ' class="v9">';
                 end;
             end else begin
                 txt := txt + '>';
