@@ -5,7 +5,7 @@ object Form3: TForm3
   Caption = 
     ' pick a foreground or backgroundcolor / change Hue, Saturation, ' +
     'Luminance'
-  ClientHeight = 194
+  ClientHeight = 102
   ClientWidth = 699
   Color = 16311232
   Font.Charset = DEFAULT_CHARSET
@@ -19,10 +19,11 @@ object Form3: TForm3
   TextHeight = 13
   object davColorBox1: TdavColorBox
     Left = 1
-    Top = 102
-    Width = 649
-    Height = 89
+    Top = 50
+    Width = 169
+    Height = 49
     OnSelect = davColorBox1Select
+    colordepth = cb64
     border = 4
   end
   object Label1: TLabel
