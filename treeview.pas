@@ -460,6 +460,7 @@ var
     text, name, colstr: String;
     kleur: TColor;
     totalsize: Integer; // if ok, number of lines in the Iliad
+    lastline: string;
     function ProcessTreeItem(treechildnode: PVirtualNode; XMLparentNode: IXMLNode): Integer;
     var // node has Greek text IFF it's a leaf
         XMLchildNode: IXMLNode;
@@ -485,6 +486,7 @@ var
             //name := 'line'; // leaf. keep this name!
             //XMLchildNode := XMLparentNode.AddChild(name);  //--
             Form1.ProgressBar1.Position := tdata.index;
+            lastline := tdata.linenumber;
         end else begin
             name := 'lvl' + String(IntToStr(lvl));
             XMLchildNode := XMLparentNode.AddChild(name);
@@ -505,14 +507,9 @@ var
         size := 0;
         if treechildnode.ChildCount > 0 then // if not a leaf, then...
         begin
-            text := tdata.Data;
-            if text <> '' then
-            begin
-                XMLchildNode.Attributes['d'] := text;
-            end else begin
-                if (lvl >= 1) and (name <> 'line') then
-                    XMLchildNode.Attributes['d'] := 'descr';
-            end;
+            XMLchildNode.Attributes['d'] := tdata.Data;
+            if tdata.remark <> '' then XMLchildNode.Attributes['rem'] := tdata.remark;
+
             kleur := tdata.BGColor;
             colstr := ColorString(kleur);
             colstr := ReverseColor(colstr);
@@ -538,6 +535,7 @@ var
         while treechildnode <> nil do
         begin
             size := size + ProcessTreeItem(treechildnode, XMLchildNode);
+            XMLchildNode.Attributes['last'] := lastline;
             treechildnode := treechildnode.NextSibling;
         end;
         if size > 1 then
