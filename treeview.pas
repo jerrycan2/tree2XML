@@ -162,6 +162,7 @@ type
 
     private
         EditingBookmark: Boolean;
+        canonlist: TStringList;
         procedure GetTextLines(Sender: TBaseVirtualTree; Node: PVirtualNode; Data: Pointer; var Abort: Boolean);
         procedure setheight(Sender: TBaseVirtualTree; Node: PVirtualNode; Data: Pointer; var Abort: Boolean);
         // :        TVTGetNodeProc;
@@ -170,6 +171,7 @@ type
         procedure SaveRemarks;
         procedure LoadRemarks;
         function convertchar(c: String): String;
+
 
     public
         ButlerFileName: string;
@@ -634,7 +636,7 @@ var
                 XMLchildNode.Attributes['ital'] := '1';
 
         end else begin // leaf
-            XMLchildNode.NodeValue := tdata.Data;
+            XMLchildNode.NodeValue := canonlist.Strings[tdata.index];
             XMLchildNode.Attributes['lnr'] := tdata.linenumber;
             size := 1;
         end;
@@ -2555,6 +2557,9 @@ begin
     ImageList1.Insert(0, icons, mask);
 
     Application.HintHidePause := 20000;
+
+    canonlist := TStringList.Create;
+    canonlist.LoadFromFile('iliad15688.corrected.txt', TEncoding.UTF8);
 
     ProgressBar1.Max := 15683;
     FormResize(nil);
