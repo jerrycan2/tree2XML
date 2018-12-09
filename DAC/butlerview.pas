@@ -43,11 +43,11 @@ type
         class operator GreaterThanOrEqual(a: TLine; b: TLine): boolean;
 
     var
+//        chaplen: array [1 .. 24] of integer = // iliad book lengths
+//          (611, 877, 461, 544, 909, 529, 482, 561, 713, 579, 848, 471, 837, 522, 746, 867, 761, 616, 424, 503, 611, 515,
+//          897, 804);
     const
         GRalfabet: String = ('ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ');
-        chaplen: array [1 .. 24] of integer = // iliad book lengths
-          (611, 877, 461, 544, 909, 529, 482, 561, 713, 579, 848, 471, 837, 522, 746, 867, 761, 616, 424, 503, 611, 515,
-          897, 804);
         property chap: integer read getch write setch;
         property line: integer read getln write setln;
         property data: TLinenumber read getdata write setdata;
@@ -198,7 +198,7 @@ end;
 
 function TLine.is_lastline: boolean;
 begin
-    if (ln.chap = 24) and (ln.line = chaplen[24]) then Result := true
+    if (ln.chap = 24) and (ln.line = Form1.chaplen[24]) then Result := true
     else Result := False;
 end;
 
@@ -264,7 +264,7 @@ begin
     if lnr.line = 0 then
     begin
         lnr.chap := lnr.chap - 1;
-        lnr.line := chaplen[lnr.chap];
+        lnr.line := Form1.chaplen[lnr.chap];
     end;
     result := lnr;
 end;
@@ -275,7 +275,7 @@ var
 begin
     lnr.data := ln;
     lnr.line := lnr.line + 1;
-    if lnr.line > chaplen[lnr.chap] then
+    if lnr.line > Form1.chaplen[lnr.chap] then
     begin
         lnr.chap := lnr.chap + 1;
         lnr.line := 1;
@@ -646,7 +646,7 @@ begin
         Inode := ButlerXMLDoc.DocumentElement.ChildNodes.first;
         while Inode <> nil do
         begin
-            if Inode.NodeName = 'P' then
+            if (Inode.NodeName = 'P') or (Inode.NodeName = 'p') then
             begin
                 newcard := TCard.Create;
                 newcard.first.SetFromID(Inode.ChildNodes[0].text);
@@ -661,7 +661,7 @@ begin
             Inode := Inode.NextSibling; // no depth in this xml file
         end;
         cards[n - 1].last.chap := 24;
-        cards[n - 1].last.line := TLine.chaplen[24];
+        cards[n - 1].last.line := Form1.chaplen[24];
 
     except on E: Exception do
         if newcard = nil then ShowMessage('not an xml file?')
@@ -870,9 +870,10 @@ begin
         else exit;
     end;
     ButlerXMLDoc := TXMLDocument.Create(Self);
-    Form1.ButlerFileName := Form1.ButlerFileName;
+    //Form1.ButlerFileName := Form1.ButlerFileName;
     ButlerXMLDoc.LoadFromFile(Form1.ButlerFileName);
     StatusBar1.Panels[0].Text := 'using ' + System.IOUtils.TPath.GetFullPath(Form1.ButlerFileName);
+    //StatusBar1.Panels[0].Text := 'using ' + Form1.ButlerFileName;
     LoadCardsFromXML;
     ButlerXMLDoc.Free;
 end;

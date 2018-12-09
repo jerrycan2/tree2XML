@@ -175,6 +175,7 @@ type
 
     public
         ButlerFileName: string;
+        CanonFileName: string;
         DefaultFG: TColor;
         DefaultBG: TColor;
         TreeTop: PVirtualNode;
@@ -184,6 +185,8 @@ type
         icons: TBitMap;
         mask: TBitMap;
         FormLeft, FormTop, FormWidth, FormHeight: Integer;
+        chaplen: array [1 .. 24] of Integer;
+        DoRenumber: boolean;
     end;
 
 type
@@ -216,15 +219,15 @@ var
     NumLines: Integer;
     Lineindex: Integer;
     Chapindex: Integer;
+//    chaplen: array [1 .. 24] of Integer = // iliad book lengths
+//      (611, 877, 461, 544, 909, 529, 482, 561, 713, 579, 848, 471, 837, 522, 746, 867, 761, 616, 424, 503, 611, 515,
+//      897, 804);
 
 const
     NofColors = 20;
     BOM: Char = #$FEFF;
     GRalfabet: String = ('ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω');
     Lalfabet: String = ('ABGDEZHQIKLMNCOPRSTUFXYWabgdezhqiklmncoprstufxyw');
-    chaplen: array [1 .. 24] of Integer = // iliad book lengths
-      (611, 877, 461, 544, 909, 529, 482, 561, 713, 579, 848, 471, 837, 522, 746, 867, 761, 616, 424, 503, 611, 515,
-      897, 804);
 
 implementation
 
@@ -403,16 +406,21 @@ var
             begin
                 if not error_shown then
                 begin
-                    ShowMessage('Linenumber error in: ' + text + ',oud: ' + textoud);
+                    ShowMessage('Linenumber error in: ' + text + ',oud: ' + text);
                     error_shown := True;
                 end;
             end;
 
-            // Form2.grid.Cells[ 0, Linecount ] := text;
-            item.Caption := textoud; //in case of renumbering after error: use text instead
+            if DoRenumber then begin //renumbering: set 'renumber' to 'yes' in iltree.inf before loading
+                item.Caption := text;
+                tdata.linenumber := text;
+            end
+            else begin
+                item.Caption := textoud;
+                tdata.linenumber := textoud;
+            end;
             ButlerForm.SetListColors(Linecount, Form1.DefaultFG, Form1.DefaultBG);
 
-            tdata.linenumber := textoud; //in case of renumbering after error: use text instead
             tdata.index := Linecount;
             Lineindex := Lineindex + 1;
             Linecount := Linecount + 1;
@@ -444,7 +452,7 @@ begin (* XML2TREE *)
     ButlerForm.GreekView.Items.BeginUpdate;
     ButlerForm.GreekView.Items.Clear;
     jNode := XMLDoc.DocumentElement;
-    Form1.ProgressBar1.Max := StrToInt(jNode.Attributes['sz']);
+    //Form1.ProgressBar1.Max := StrToInt(jNode.Attributes['sz']);
     ProcessNode(jNode, nil);
 
     ButlerForm.GreekView.Items.EndUpdate;
@@ -676,7 +684,7 @@ begin // Tree2XML
         tn := tn.NextSibling;
     end;
     iNode.Attributes['sz'] := IntToStr(totalsize);
-    XMLfilename := 'iliad.xml'; //Form1.choosefile.Items[Form1.choosefile.ItemIndex];
+    XMLfilename := Form1.choosefile.Items[Form1.choosefile.ItemIndex];
     if not XMLDoc.IsEmptyDoc then
     begin
         RenameBackups(XMLfilename);
@@ -2501,6 +2509,10 @@ end;
 
 // *************** CREATE DESTROY ******************
 procedure TForm1.FormCreate(Sender: TObject);
+var
+    i: integer;
+    clens: string;
+    list: TStringList;
 begin
     // System.ReportMemoryLeaksOnShutdown := True;
     // no access to Form2 here!
@@ -2518,7 +2530,8 @@ begin
             ChooseDir.WorkDir := Values['workdir'];
             if not DirectoryExists(ChooseDir.WorkDir) then
                 ChooseDir.WorkDir := ChooseDir.HomeDir;
-            ButlerFileName := Values['butlerfile'];
+            ButlerFileName := ChooseDir.WorkDir + '\' + Values['butlerfile'];
+            CanonFileName := ChooseDir.WorkDir + '\' + Values['canon'];
             DefaultBG := StrToInt(Values['ilbgcolor']);
             DefaultFG := StrToInt(Values['ilfgcolor']);
             Form1.Left := StrToInt(Values['illeft']);
@@ -2533,6 +2546,14 @@ begin
             autosave.State := TCheckBoxState(StrToInt(Values['autosave']));
             autoload.State := TCheckBoxState(StrToInt(Values['autoload']));
             GreekHidden.State := TCheckBoxState(StrToInt(Values['showleaves']));
+            if Values['renumber'] = 'yes' then DoRenumber := true else DoRenumber := false;
+            // renumber setting is not saved. change it in iltree.inf
+            list := TStringList.Create;
+            list.CommaText := Values['chaplengths'];
+            for i := 1 to 24 do  begin
+                chaplen[i] := StrToInt(list.Strings[i-1]);
+            end;
+            list.Destroy;
         end;
     end else begin
         DefaultFG := Iltree.Font.Color;
@@ -2559,7 +2580,7 @@ begin
     Application.HintHidePause := 20000;
 
     canonlist := TStringList.Create;
-    canonlist.LoadFromFile('iliad15688.corrected.txt', TEncoding.UTF8);
+    canonlist.LoadFromFile(CanonFileName, TEncoding.UTF8);
 
     ProgressBar1.Max := 15683;
     FormResize(nil);
@@ -2615,9 +2636,12 @@ begin
 end;
 
 procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
+var
+    clens: string;
+    i: integer;
 begin
     Settings.Values['workdir'] := ChooseDir.WorkDir;
-    Settings.Values['butlerfile'] := ButlerFileName;
+    Settings.Values['butlerfile'] := SysUtils.ExtractFileName(ButlerFileName);
     Settings.Values['ilbgcolor'] := IntToStr(DefaultBG);
     Settings.Values['ilfgcolor'] := IntToStr(DefaultFG);
     Settings.Values['illeft'] := IntToStr(FormLeft);
@@ -2634,6 +2658,15 @@ begin
     Settings.Values['autosave'] := IntToStr(Integer(autosave.State));
     Settings.Values['autoload'] := IntToStr(Integer(autoload.State));
     Settings.Values['showleaves'] := IntToStr(Integer(GreekHidden.State));
+    Settings.Values['canon'] := SysUtils.ExtractFileName(CanonFileName);
+    Settings.Values['renumber'] := 'no';
+    clens := '';
+    for i := 1 to 24 do begin
+        clens := clens + IntToStr(chaplen[i]);
+        if i < 24 then clens := clens + ',';
+    end;
+    Settings.Values['chaplengths'] := clens;
+
 
     Settings.SaveToFile(ChooseDir.HomeDir + '/iltree.inf');
 
